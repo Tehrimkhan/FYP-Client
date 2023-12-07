@@ -44,14 +44,12 @@ const YouPage = () => {
 
       const formData = new FormData();
       formData.append("file", {
-        name: new Date(),
         uri: profileImage,
         type: "image/jpg",
       });
 
       const response = await API.put("/update-image", formData, {
         headers: {
-          Accept: "application/json",
           "Content-Type": "multipart/form-data",
           Authorization: token,
         },
