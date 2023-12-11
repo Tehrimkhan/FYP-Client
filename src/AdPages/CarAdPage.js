@@ -13,6 +13,11 @@ import SelectImage from "../Component/SelectImage";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AuthContext } from "../context/authContext";
 import { API } from "../api/config";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  "pk_test_51OBalnCqGjyjTkAY9dTa4EdIxHfyluvV2pJtbExYurNHYgerZ0v3wnM4kz97bbIfgQ55YRbGPAqpxphvx0K6R2AC00CdB5YbIX"
+);
 
 const CarAdPage = ({ navigation }) => {
   const [title, setTitle] = useState("Car");
@@ -30,28 +35,27 @@ const CarAdPage = ({ navigation }) => {
     console.log("Selected Images:", imageURIs);
   };
 
-  const handleSubmit = async (token) => {
+  const handleSubmit = async () => {
     try {
       if (!make || !name || !model || !variant || !rent || !description) {
         alert("Please Fill All Post Fields!");
       } else {
-        const data = await API.post("/post/create-post", {
-          postImages,
-          title,
+        const paymentData = {
+          make,
           name,
           model,
-          make,
           variant,
           rent,
           description,
-        });
-        alert(data?.data.message);
-        alert("Post Will Be Published After Admin Approval");
-        navigation.navigate("Dashboard");
+        };
+
+        navigation.navigate("PaymentPage", { paymentData });
       }
     } catch (error) {
-      alert(error.data ? error.data.data.message : "Unknown error occurred");
-      console.log(error);
+      alert(
+        error.response ? error.response.data.message : "Unknown error occurred"
+      );
+      console.error(error);
     }
   };
 

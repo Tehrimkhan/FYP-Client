@@ -71,6 +71,9 @@ const SignUp = ({ navigation }) => {
       console.log(error);
     }
   };
+  const logIn = () => {
+    navigation.navigate("LoginPage");
+  };
   return (
     <View style={styles.bgContainer}>
       <View style={styles.imageContainer}>
@@ -159,7 +162,7 @@ const SignUp = ({ navigation }) => {
         >
           <Text style={styles.buttonText}>SIGN IN</Text>
         </TouchableOpacity>
-
+        {/* 
         <ClerkProvider
           publishableKey={
             "pk_test_YXB0LXRlcnJhcGluLTkzLmNsZXJrLmFjY291bnRzLmRldiQ"
@@ -173,8 +176,13 @@ const SignUp = ({ navigation }) => {
               <SignInWithOAuth />
             </SignedOut>
           </SafeAreaView>
-        </ClerkProvider>
-        <View style={styles.lowerContainer}></View>
+        </ClerkProvider> */}
+        <View style={styles.lowerContainer}>
+          <Text style={styles.lowerText}>Already have an account ? </Text>
+          <TouchableOpacity onPress={() => logIn()}>
+            <Text style={styles.signupText}>Log In</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -189,7 +197,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: "absolute",
-    bottom: "69%",
+    bottom: "70%",
     left: 0,
   },
 
@@ -205,7 +213,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 320, // Adjust the marginBottom for spacing
+    marginBottom: 50, // Adjust the marginBottom for spacing
   },
   headerImageStyle: {
     width: "100%",
@@ -221,14 +229,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontStyle: "normal",
     fontWeight: "700",
-    marginLeft: 10, // Add marginLeft for spacing between logo and text
+    marginLeft: 10,
   },
   lowerheader: {
     color: "rgba(0, 0, 0, 0.58)",
     fontSize: 14,
     fontStyle: "normal",
     fontWeight: "700",
-    marginBottom: 20, // Adjust marginBottom for spacing
+    marginBottom: 20,
   },
   logo: {
     display: "flex",
@@ -244,8 +252,9 @@ const styles = StyleSheet.create({
   innerContainer: {
     borderRadius: 10,
     padding: 20,
-    marginTop: 40,
-    marginBottom: -30,
+
+    // marginTop: 40,
+    // marginBottom: -30,
   },
   mainHeader: {
     borderRadius: 10,
@@ -309,11 +318,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 10,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center", // Center horizontally
   },
   lowerText: {
+    marginTop: 10,
     fontSize: 16,
     fontWeight: "bold",
+  },
+  signupText: {
+    fontWeight: "bold",
+    color: "#32A1A8",
+    fontSize: 16,
+    alignItems: "center",
+    marginTop: 10,
   },
 });
 

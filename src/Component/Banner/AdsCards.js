@@ -11,6 +11,7 @@ import {
 import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+// import { AirbnbRating } from "react-native-ratings";
 
 const { width } = Dimensions.get("window");
 
@@ -66,11 +67,11 @@ const AdsCards = ({ posts, myPostScreen, userId }) => {
                 <View style={styles.postDetailsContainer}>
                   {/* <Text>PostedBy: {post?.postedBy?.name}</Text> */}
                   <View style={styles.ratingContainer}>
+                    {/* <Ionicons name="star" size={24} color="black" />
                     <Ionicons name="star" size={24} color="black" />
                     <Ionicons name="star" size={24} color="black" />
                     <Ionicons name="star" size={24} color="black" />
-                    <Ionicons name="star" size={24} color="black" />
-                    <Ionicons name="star-outline" size={24} color="black" />
+                    <Ionicons name="star-outline" size={24} color="black" /> */}
                   </View>
                   <Text style={styles.postDetailsText}>
                     {moment(post?.createdAt).format("DD:MM:YYYY")}
