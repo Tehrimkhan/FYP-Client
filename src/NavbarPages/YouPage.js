@@ -16,9 +16,11 @@ const YouPage = () => {
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
+        base64: false,
       });
 
       if (!response.cancelled) {
+        console.log(response);
         setProfileImage(response.assets[0].uri);
       }
     } catch (error) {
@@ -32,14 +34,15 @@ const YouPage = () => {
       return;
     }
 
-    const uploadUrl = "https://api.cloudinary.com/v1_1/dihvjdw0r/auto/upload/";
+    const uploadUrl = "https://api.cloudinary.com/v1_1/dihvjdw0r/image/upload/";
 
     let _file = {
       uri: profileImage,
-      name: "IMG_" + Math.random(4000) + ".jpg",
-      type: "image/jpeg",
+      name: "IMG_" + Math.random(4000) + ".png",
+      type: "image/png",
     };
 
+    console.log('_file', _file);
     const data = new FormData();
     data.append("file", _file);
     data.append("upload_preset", "m5adwqsh");
@@ -47,20 +50,23 @@ const YouPage = () => {
 
     const config = {
       headers: {
-        "X-Requested-With": "XMLHttpRequest",
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
       },
       onUploadProgress: (progressEvent) => {
         let progress = Math.round(
           (progressEvent.loaded * 100) / progressEvent.total
         );
         console.log("UPLOAD IS " + progress + "% DONE!");
-        setProgress(progress);
+        // setProgress(progress);
       },
     };
 
     console.log("Imageeee", data);
     try {
-      const response = await API.post(uploadUrl, data, config);
+      const response = await axios.post(uploadUrl, data, config).catch(error => {
+        console.log('error', JSON.stringify(error));
+      });
       console.log("Image upload response:", response.data);
 
       // sending response to backend
@@ -70,7 +76,7 @@ const YouPage = () => {
 
       console.log("Cloudinary response sent to the backend");
     } catch (error) {
-      console.error("Error uploading image:", error);
+      console.error("Error uploading image:", JSON.stringify(error));
     }
   };
 
