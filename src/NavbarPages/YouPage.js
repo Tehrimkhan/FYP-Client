@@ -5,6 +5,8 @@ import * as ImagePicker from "expo-image-picker";
 import { API } from "../api/config";
 import Menu from "../Component/Menu";
 import axios from "axios";
+import {useImageUpload} from '../utils/helpers';
+
 
 const YouPage = () => {
   const [profileImage, setProfileImage] = useState("");
@@ -28,13 +30,12 @@ const YouPage = () => {
     }
   };
 
+  const {uploadImage} = useImageUpload();
   const uploadProfileImage = async () => {
     if (!profileImage) {
       console.log("No image selected");
       return;
     }
-
-    const uploadUrl = "https://api.cloudinary.com/v1_1/dihvjdw0r/image/upload/";
 
     let _file = {
       uri: profileImage,
@@ -42,39 +43,20 @@ const YouPage = () => {
       type: "image/png",
     };
 
-    console.log('_file', _file);
-    const data = new FormData();
-    data.append("file", _file);
-    data.append("upload_preset", "m5adwqsh");
-    data.append("cloud_name", "dihvjdw0r");
 
-    const config = {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-      },
-      onUploadProgress: (progressEvent) => {
-        let progress = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        console.log("UPLOAD IS " + progress + "% DONE!");
-        // setProgress(progress);
-      },
-    };
+    // const filesBhtsari = [_file, _file, _file, _file];
 
-    console.log("Imageeee", data);
+    // const allPromises = filesBhtsari.map((file) => uploadImage(file, setProgress));
+
+    // const [image1, image2] = await Promise.all(allPromises);
+
+
+
+    // const [image1, image2] = await Promise.all([uploadImage(_file, setProgress), uploadImage(_file, setProgress), uploadImage(_file, setProgress), uploadImage(_file, setProgress),]);
+
     try {
-      const response = await axios.post(uploadUrl, data, config).catch(error => {
-        console.log('error', JSON.stringify(error));
-      });
-      console.log("Image upload response:", response.data);
-
-      // sending response to backend
-      // await API.post("storeCloudinaryResponse", {
-      //   cloudinaryResponse: response.data,
-      // });
-
-      console.log("Cloudinary response sent to the backend");
+      const imageResponse = await uploadImage(_file, setProgress);
+      console.log("Cloudinary response sent to the backend", imageResponse);
     } catch (error) {
       console.error("Error uploading image:", JSON.stringify(error));
     }
