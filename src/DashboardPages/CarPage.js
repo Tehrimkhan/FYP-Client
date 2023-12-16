@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import SearchBar from "../Component/Home/SearchBar";
 import carlogo from "../../assets/carlogo.png";
 import Menu from "../Component/Menu";
@@ -8,29 +8,54 @@ import { AuthContext } from "../context/authContext";
 import Background from "../Component/Background";
 
 const CarPage = ({ route }) => {
-  const { carPosts } = route.params; // Extract carPosts from the route parameters
-  const [userIdArray] = useContext(AuthContext); // Use AuthContext to get userId
+  const { carPosts } = route.params;
+  const [userIdArray] = useContext(AuthContext);
   const userId = userIdArray?.data?.user?._id;
+  const [searchText, setSearchText] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
-  // console.log("USER ID", userId);
+  useEffect(() => {
+    const fetchCarPosts = async () => {
+      setIsLoading(true);
+      // Replace the following line with your actual data fetching logic
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      setIsLoading(false);
+    };
+
+    fetchCarPosts();
+  }, [searchText]); // Add searchText as a dependency
 
   return (
     <View style={styles.container}>
       <Background />
       <View style={styles.searchContainer}>
         <SearchBar
-          setSearchText={(value) => console.log(value)}
+          setSearchText={(value) => setSearchText(value)}
           imageSource={carlogo}
           placeholder="SEARCH YOUR CAR"
         />
       </View>
       <View style={styles.innerContainer}>
-        <Text style={styles.lengthText}>Total Posts: {carPosts?.length}</Text>
-        {/* Display the userId */}
+        <View style={styles.textContainer}>
+          <Text style={styles.lengthText}>Total Posts: {carPosts?.length}</Text>
+        </View>
+
         <View style={styles.scrollContainer}>
-          <ScrollView>
-            <AdsCards posts={carPosts} userId={userId} />
-          </ScrollView>
+          {isLoading ? (
+            // Display a loading image or indicator
+            <Image
+              source={require("../../assets/Spinner-1s-200px.gif")}
+              style={{ width: 50, height: 50 }}
+            />
+          ) : (
+            <ScrollView>
+              <AdsCards
+                posts={carPosts}
+                userId={userId}
+                searchText={searchText}
+              />
+            </ScrollView>
+          )}
         </View>
       </View>
       <View style={styles.bottomMenu}>
@@ -39,14 +64,13 @@ const CarPage = ({ route }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   searchContainer: {
     position: "absolute",
-    top: 140,
+    top: 115,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
@@ -54,17 +78,19 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     // top: -15,
-    top: -30,
+  },
+  textContainer: {
+    top: -35,
   },
   scrollContainer: {
-    height: 520,
+    height: 480,
     marginTop: 10,
-    bottom: 10,
+    bottom: 50,
     justifyContent: "center",
     alignItems: "center",
   },
   lengthText: {
-    left: 25,
+    left: 15,
   },
   bottomMenu: {
     position: "absolute",

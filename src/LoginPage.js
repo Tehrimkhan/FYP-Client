@@ -49,7 +49,7 @@ const LoginPage = ({ navigation }) => {
           "Authorization"
         ] = `Bearer ${data.data.token}`;
 
-        console.log("Check ==== > ", data);
+        // console.log("Check ==== > ", data);
 
         if (data && data.data) {
           setState(data);
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
   headStyle: {
+    top: -10,
     width: 210,
     height: 300,
   },

@@ -24,6 +24,7 @@ import AppartmentAdPage from "./src/AdPages/AppartmentAdPage";
 import imagePicker from "./src/Component/SelectImage";
 import { AuthProvider } from "./src/context/authContext";
 import { PostProvider } from "./src/context/postContext";
+import MyPage from "./src/NavbarPages/MyPage";
 
 import PostDetailScreen from "./src/Component/DetailScreen/PostDetailScreen";
 import PaymentPage from "./src/Payment/PaymentPage";
@@ -43,9 +44,10 @@ export default function App() {
       <AuthProvider>
         <PostProvider>
           <Stack.Navigator
-            initialRouteName="LoginPage"
+            initialRouteName="MainPage"
             screenOptions={{ headerShown: false }}
           >
+            <Stack.Screen name="MyPage" component={MyPage} />
             <Stack.Screen name="MainPage" component={MainPage} />
             <Stack.Screen name="LoginPage" component={LoginPage} />
             <Stack.Screen name="SignUp" component={SignUp} />

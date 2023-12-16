@@ -119,7 +119,7 @@ const SelectImage = ({ onImagesSelected }) => {
 
 const styles = StyleSheet.create({
   imagePickerButton: {
-    marginLeft: 5, // Add left margin to create space between icon and text
+    // marginLeft: 5, // Add left margin to create space between icon and text
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -130,20 +130,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20, // Adjust horizontal padding as needed
   },
   imagePreview: {
-    width: 200,
-    height: 100,
-    marginVertical: 10,
-    marginLeft: 70,
+    width: 350,
+    height: 150,
   },
   buttonText: {
-    marginLeft: 5, // Add left margin to create space between icon and text
+    marginLeft: 5,
     fontFamily: "appfont",
     fontSize: 18,
     color: "white",
   },
   imageArea: {
-    width: 200, // Set the width to an appropriate value
-    height: 200, // Set the height to an appropriate value
+    width: 200,
+    height: 200,
   },
   modalContainer: {
     flex: 1,

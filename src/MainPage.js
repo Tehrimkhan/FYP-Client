@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
   headStyle: {
+    top: -10,
     width: 210,
     height: 300,
   },

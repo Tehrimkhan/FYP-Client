@@ -207,6 +207,7 @@ const styles = StyleSheet.create({
     },
   */
   headStyle: {
+    top: -5,
     width: 210,
     height: 300,
   },

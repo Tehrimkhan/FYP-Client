@@ -14,6 +14,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { AuthContext } from "../context/authContext";
 import { API } from "../api/config";
 import { loadStripe } from "@stripe/stripe-js";
+import Menu from "../Component/Menu";
 
 const stripePromise = loadStripe(
   "pk_test_51OBalnCqGjyjTkAY9dTa4EdIxHfyluvV2pJtbExYurNHYgerZ0v3wnM4kz97bbIfgQ55YRbGPAqpxphvx0K6R2AC00CdB5YbIX"
@@ -115,12 +116,16 @@ const CarAdPage = ({ navigation }) => {
           <Text style={styles.buttonText}>CREATE POST</Text>
         </TouchableOpacity>
       </ScrollView>
+      <View style={styles.menuContainer}>
+        <Menu />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    top: 150,
     padding: 20,
     resizeMode: "cover",
   },
@@ -168,6 +173,9 @@ const styles = StyleSheet.create({
     fontFamily: "appfont",
     fontSize: 18,
     color: "white",
+  },
+  menuContainer: {
+    top: 295,
   },
 });
 

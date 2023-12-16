@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import Background from "../Component/Background";
 import * as ImagePicker from "expo-image-picker";
 import { API } from "../api/config";
+import Menu from "../Component/Menu";
+import axios from "axios";
 
 const YouPage = () => {
   const [profileImage, setProfileImage] = useState("");
-  const [progress, setProgress] = useState(0);
-  const [uploading, setUploading] = useState(false);
-
+  const [progress, setProgress] = useState(0); // Fix: Initialize progress state with setProgress function
   const openImageLibrary = async () => {
     try {
       let response = await ImagePicker.launchImageLibraryAsync({
@@ -27,55 +27,59 @@ const YouPage = () => {
   };
 
   const uploadProfileImage = async () => {
+    if (!profileImage) {
+      console.log("No image selected");
+      return;
+    }
+
+    const uploadUrl = "https://api.cloudinary.com/v1_1/dihvjdw0r/auto/upload/";
+
+    let _file = {
+      uri: profileImage,
+      name: "IMG_" + Math.random(4000) + ".jpg",
+      type: "image/jpeg",
+    };
+
+    const data = new FormData();
+    data.append("file", _file);
+    data.append("upload_preset", "m5adwqsh");
+    data.append("cloud_name", "dihvjdw0r");
+
+    const config = {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+      },
+      onUploadProgress: (progressEvent) => {
+        let progress = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        console.log("UPLOAD IS " + progress + "% DONE!");
+        setProgress(progress);
+      },
+    };
+
+    console.log("Imageeee", data);
     try {
-      const token = API.defaults.headers.common["Authorization"];
+      const response = await API.post(uploadUrl, data, config);
+      console.log("Image upload response:", response.data);
 
-      if (!token || token.trim() === "") {
-        alert("Authorization token missing. Please log in.");
-        return;
-      }
+      // sending response to backend
+      // await API.post("storeCloudinaryResponse", {
+      //   cloudinaryResponse: response.data,
+      // });
 
-      if (!profileImage) {
-        console.log("No image selected");
-        return;
-      }
-
-      setUploading(true);
-
-      const formData = new FormData();
-      formData.append("file", {
-        uri: profileImage,
-        type: "image/jpg",
-      });
-
-      const response = await API.put("/update-image", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: token,
-        },
-        onUploadProgress: (progressEvent) => {
-          const progressPercentage = Math.round(
-            (progressEvent.loaded / progressEvent.total) * 100
-          );
-          setProgress(progressPercentage);
-        },
-      });
-
-      if (response.data.success) {
-        console.log(response.data.message);
-      } else {
-        console.log("Error updating profile picture:", response.data.message);
-      }
+      console.log("Cloudinary response sent to the backend");
     } catch (error) {
-      console.log("Error uploading profile image:", error.message);
-    } finally {
-      setUploading(false);
+      console.error("Error uploading image:", error);
     }
   };
 
   return (
     <View>
-      <Background />
+      <View style={styles.backgroundcontainer}>
+        <Background />
+      </View>
+
       <View style={styles.container}>
         <TouchableOpacity
           onPress={openImageLibrary}
@@ -103,13 +107,16 @@ const YouPage = () => {
           </Text>
         ) : null}
       </View>
+      <View style={styles.menucontainer}>
+        <Menu />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    top: 100,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -143,6 +150,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textTransform: "uppercase",
     opacity: 0.5,
+  },
+  menucontainer: {
+    top: 595,
   },
 });
 

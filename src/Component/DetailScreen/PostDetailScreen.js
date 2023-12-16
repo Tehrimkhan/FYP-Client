@@ -97,7 +97,6 @@ const PostDetailScreen = ({ route }) => {
   };
   return (
     <View>
-      <Background />
       <Ionicons
         name="arrow-back-sharp"
         size={30}
@@ -224,7 +223,7 @@ const PostDetailScreen = ({ route }) => {
                 </TouchableOpacity>
               )}
               {userId === post?.postedBy?._id && (
-                <View>
+                <View style={styles.ownPostContainer}>
                   <Text style={styles.ownPostText}>THIS IS YOUR OWN POST</Text>
                   <View
                     style={[
@@ -263,16 +262,15 @@ const styles = StyleSheet.create({
   superContainer: {
     justifyContent: "center",
     alignItems: "center",
-    // top: 90,
+    top: 40,
   },
   overallContainer: {
     justifyContent: "center",
     alignItems: "center",
-    top: -190,
   },
   outerContainer: {
     top: 30,
-    height: 550,
+    height: 540,
     width: 380,
     backgroundColor: "#D9D9D9",
     borderRadius: 25,
@@ -281,7 +279,7 @@ const styles = StyleSheet.create({
   innerMainContainer: {
     top: -40,
     width: 360,
-    height: 340,
+    height: 325,
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
     left: 10,
@@ -361,6 +359,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
   },
+  ownPostContainer: {
+    top: 40,
+  },
   // sellerContainer: {
   //   top: 20,
   //   width: 360,
@@ -418,8 +419,8 @@ const styles = StyleSheet.create({
   },
   bottomMenu: {
     position: "absolute",
-    // bottom: -100,
-    bottom: 160,
+    bottom: -50,
+    // bottom: 160,
     left: 0,
     right: 0,
     borderTopWidth: 2,

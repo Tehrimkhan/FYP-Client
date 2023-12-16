@@ -13,12 +13,18 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { API } from "../../api/config";
 
-const SearchBar = ({ setSearchText, imageSource, placeholder }) => {
+const SearchBar = ({
+  setSearchText,
+  imageSource,
+  placeholder,
+  setSortOption,
+  setSortedPosts,
+}) => {
   const [searchInput, setSearchInput] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleSearch = () => {
-    console.log(searchInput);
+    setSearchText(searchInput);
     setSearchInput("");
   };
 
@@ -27,17 +33,8 @@ const SearchBar = ({ setSearchText, imageSource, placeholder }) => {
   };
 
   const handleSortOption = (option) => {
-    // Handle the selected sort option (e.g., make an API call or update state)
-    console.log("Selected Sort Option:", option);
-    let response;
-
-    if (option === "lowToHigh") {
-      response = API.get("/filters/low-to-high-rent");
-    } else if (option === "highToLow") {
-      response = API.get("/filters/high-to-low-rent");
-    }
-
-    // Close the modal
+    setSortOption(option);
+    setSortedPosts(null); // Reset sorted posts when a new sort option is selected
     setModalVisible(false);
   };
   return (
@@ -97,9 +94,18 @@ const SearchBar = ({ setSearchText, imageSource, placeholder }) => {
             <TouchableOpacity onPress={() => handleSortOption("lowToHigh")}>
               <Text style={styles.sortOption}>Low to High Rent</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => handleSortOption("alphabeticalOrder")}
+            >
+              <Text style={styles.sortOption}>AlphabeticalOrder</Text>
+            </TouchableOpacity>
             <Pressable
               style={styles.closeButton}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => {
+                handleSortOption(null); // Reset sort option when closing modal
+                setModalVisible(!modalVisible);
+              }}
             >
               <Text style={styles.closeButtonText}>Close</Text>
             </Pressable>

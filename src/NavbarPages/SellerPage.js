@@ -47,7 +47,9 @@ const SellerPage = ({ navigation }) => {
           placeholder="ADD YOUR FURNITURE"
         />
       </View>
-      <Menu />
+      <View style={styles.menuContainer}>
+        <Menu />
+      </View>
     </View>
   );
 };
@@ -60,7 +62,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerContainer: {
-    top: -30,
     flexDirection: "row",
     backgroundColor: "#8A7A7A",
     height: 55,
@@ -74,7 +75,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    borderRadius: 20,
+    borderRadius: 10,
+    bottom: 80,
   },
   headerText: {
     color: "#FFFFFF",
@@ -82,7 +84,13 @@ const styles = StyleSheet.create({
     marginLeft: 50,
   },
   btnContainer: {
+    bottom: 30,
     right: 10,
+  },
+  menuContainer: {
+    //added
+    top: 100,
+    right: 200,
   },
 });
 

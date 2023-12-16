@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -7,24 +7,67 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Modal,
+  Pressable,
 } from "react-native";
 import moment from "moment";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-// import { AirbnbRating } from "react-native-ratings";
 
 const { width } = Dimensions.get("window");
 
-const AdsCards = ({ posts, myPostScreen, userId }) => {
+const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
   const navigation = useNavigation();
-  // console.log("USER ID FROM ADS", userId);
+  const [sortedPosts, setSortedPosts] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
   const handlePostPress = (post, myPostScreen, userId) => {
     navigation.navigate("PostDetailScreen", { post, myPostScreen, userId });
   };
+
+  const filterAndSortPosts = () => {
+    const filteredPosts = posts.filter((post) => {
+      const name = post?.name?.toLowerCase() || "";
+      const make = post?.make?.toLowerCase() || "";
+      const model = post?.model?.toLowerCase() || "";
+      const rent = post?.rent?.toLowerCase() || "";
+
+      return (
+        name.includes(searchText.toLowerCase()) ||
+        make.includes(searchText.toLowerCase()) ||
+        model.includes(searchText.toLowerCase()) ||
+        rent.includes(searchText.toLowerCase())
+      );
+    });
+
+    return sortedPosts.length ? sortedPosts : filteredPosts;
+  };
+
+  const handleSortOption = (option) => {
+    let sortedPosts = [...filterAndSortPosts()];
+
+    if (option === "lowToHigh") {
+      // Sort by rent in ascending order
+      sortedPosts = sortedPosts.sort(
+        (a, b) => parseInt(a.rent) - parseInt(b.rent)
+      );
+    } else if (option === "highToLow") {
+      // Sort by rent in descending order
+      sortedPosts = sortedPosts.sort(
+        (a, b) => parseInt(b.rent) - parseInt(a.rent)
+      );
+    } else if (option === "alphabeticalOrder") {
+      // Sort alphabetically by the name property
+      sortedPosts = sortedPosts.sort((a, b) => a.name?.localeCompare(b.name));
+    }
+
+    setSortedPosts(sortedPosts);
+    setModalVisible(false);
+  };
+
   return (
     <View>
       <View style={styles.container}>
-        {posts?.map((post, index) => (
+        {filterAndSortPosts().map((post, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => handlePostPress(post, myPostScreen, userId)}
@@ -61,17 +104,9 @@ const AdsCards = ({ posts, myPostScreen, userId }) => {
                     | Rent: {post?.rent}
                   </Text>
                 </View>
-                {/* <Text>Make: {post?.make}</Text> */}
-                {/* <Text>Variant: {post?.variant}</Text>
-                <Text>Description: {post?.description}</Text> */}
                 <View style={styles.postDetailsContainer}>
-                  {/* <Text>PostedBy: {post?.postedBy?.name}</Text> */}
                   <View style={styles.ratingContainer}>
-                    {/* <Ionicons name="star" size={24} color="black" />
-                    <Ionicons name="star" size={24} color="black" />
-                    <Ionicons name="star" size={24} color="black" />
-                    <Ionicons name="star" size={24} color="black" />
-                    <Ionicons name="star-outline" size={24} color="black" /> */}
+                    {/* Your rating icons or components go here */}
                   </View>
                   <Text style={styles.postDetailsText}>
                     {moment(post?.createdAt).format("DD:MM:YYYY")}
@@ -82,6 +117,32 @@ const AdsCards = ({ posts, myPostScreen, userId }) => {
           </TouchableOpacity>
         ))}
       </View>
+
+      {/* Modal for filter options */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(!modalVisible)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity onPress={() => handleSortOption("highToLow")}>
+              <Text style={styles.sortOption}>High to Low Rent</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => handleSortOption("lowToHigh")}>
+              <Text style={styles.sortOption}>Low to High Rent</Text>
+            </TouchableOpacity>
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -95,7 +156,7 @@ const styles = StyleSheet.create({
     width: 338,
     backgroundColor: "#D9D9D9",
     borderRadius: 25,
-    marginBottom: 20,
+    marginBottom: 5,
     marginTop: 10,
   },
   card: {

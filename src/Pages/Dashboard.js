@@ -147,12 +147,12 @@ const styles = StyleSheet.create({
     bottom: 20,
   },
   sliderContainer: {
-    marginTop: 135,
+    marginTop: 130,
     //Added
-    marginBottom: 29,
+    marginBottom: 25,
   },
   buttonContainer: {
-    marginTop: 20,
+    marginTop: 5,
   },
   carbuttonStyle: {
     backgroundColor: "#D8D6F7",
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   appbuttonStyle: {
     backgroundColor: "#FED9EB",
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   apartbuttonStyle: {
     backgroundColor: "#B3DFAC",
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   furnbuttonStyle: {
     backgroundColor: "#FFE2AA",
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   buttonText: {
     fontSize: 14,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   },
   bottomMenu: {
     position: "absolute",
-    bottom: -30,
+    bottom: -40,
     left: 0,
     right: 0,
     borderTopWidth: 2,
