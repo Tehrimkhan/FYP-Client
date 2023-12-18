@@ -9,8 +9,18 @@ import Background from "../Component/Background";
 
 const CarPage = ({ route }) => {
   const { carPosts } = route.params;
-  const [userIdArray] = useContext(AuthContext);
-  const userId = userIdArray?.data?.user?._id;
+  // const [userIdArray] = useContext(AuthContext);
+  // const userId = userIdArray?.data?.user?._id;
+  const [
+    userId,
+    setUserId,
+    userName,
+    setUserName,
+    userImage,
+    setUserImage,
+    userEmail,
+    setUserEmail,
+  ] = useContext(AuthContext);
   const [searchText, setSearchText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 

@@ -13,11 +13,11 @@ const MyAdsPage = () => {
     try {
       const response = await API.get("/post/get-user-post");
       setPosts(response?.data?.userPosts);
-      setIsLoading(false); // Set loading to false after data is fetched
+      setIsLoading(false);
     } catch (error) {
       console.error("Error Fetching User Posts:", error);
       alert("Error fetching user posts");
-      setIsLoading(false); // Set loading to false in case of an error
+      setIsLoading(false);
     }
   };
 
