@@ -27,22 +27,22 @@ const SellerPage = ({ navigation }) => {
       </View>
       <View style={styles.btnContainer}>
         <SellerButtons
-          onPress={() => navigateToScreen("CarAdPage")} // Navigate to CarScreen on button press
+          onPress={() => navigateToScreen("CarAdPage")}
           imageSource={carlogo}
           placeholder="ADD YOUR CAR"
         />
         <SellerButtons
-          onPress={() => navigateToScreen("apparelAdPage")} // Navigate to ApparelScreen on button press
+          onPress={() => navigateToScreen("ApparelAdPage")}
           imageSource={applogo}
           placeholder="ADD YOUR APPARELS"
         />
         <SellerButtons
-          onPress={() => navigateToScreen("appartmentAdPage")} // Navigate to ApartmentScreen on button press
+          onPress={() => navigateToScreen("appartmentAdPage")}
           imageSource={apartlogo}
           placeholder="ADD YOUR APPARTMENT"
         />
         <SellerButtons
-          onPress={() => navigateToScreen("furnitureAdPage")} // Navigate to FurnitureScreen on button press
+          onPress={() => navigateToScreen("furnitureAdPage")}
           imageSource={furnlogo}
           placeholder="ADD YOUR FURNITURE"
         />

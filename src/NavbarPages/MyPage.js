@@ -1,94 +1,189 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Button, Image, StyleSheet } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import Background from "../Component/Background";
 import * as ImagePicker from "expo-image-picker";
-import Constants from "expo-constants";
 import { API } from "../api/config";
-const MyPage = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
+import Menu from "../Component/Menu";
+import axios from "axios";
+import { useImageUpload } from "../utils/helpers";
+import { AuthContext } from "../context/authContext";
 
+const MyPage = () => {
+  const [profileImage, setProfileImage] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userIdArray] = useContext(AuthContext);
+  const userId = userIdArray?.data?.user?._id;
+  // console.log("You", userId);
   useEffect(() => {
-    getMediaLibraryPermission();
+    getUserProfile();
   }, []);
 
-  const getMediaLibraryPermission = async () => {
-    if (Constants.platform.ios || Constants.platform.android) {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Permission to access media library denied");
+  const getUserProfile = async () => {
+    try {
+      const response = await API.get("/profile");
+      const { user } = response.data;
+
+      setUserName(user.name);
+      setUserEmail(user.email);
+
+      if (user.profileImage && user.profileImage.length > 0) {
+        setProfileImage(user.profileImage[0].secure_url);
       }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
     }
   };
 
-  const handleFileChange = async () => {
+  const openImageLibrary = async () => {
     try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      let response = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
+        base64: false,
       });
 
-      if (!result.cancelled) {
-        setSelectedFile(result);
+      if (!response.cancelled) {
+        console.log(response);
+        setProfileImage(response.assets[0].uri);
       }
     } catch (error) {
-      console.error("ImagePicker Error: ", error);
+      console.error("Error picking image", error);
     }
   };
 
-  const handleUpload = async () => {
+  const { uploadImage } = useImageUpload();
+  const uploadProfileImage = async () => {
+    if (!profileImage) {
+      console.log("No image selected");
+      return;
+    }
+
+    let _file = {
+      uri: profileImage,
+      name: "IMG_" + Math.random(4000) + ".png",
+      type: "image/png",
+    };
+
+    const token = API.defaults.headers.common["Authorization"];
+
     try {
-      const token = API.defaults.headers.common["Authorization"];
-      if (!selectedFile) {
-        console.error("No file selected");
-        return;
-      }
+      const imageResponse = await uploadImage(_file, setProgress);
+      console.log("Cloudinary response sent to the backend", imageResponse);
 
-      const formData = new FormData();
-      formData.append("file", {
-        uri: selectedFile.uri,
-        type: selectedFile.type,
-        name: "profile-image", // You can change this name as needed
-      });
-      console.log(base64(formData));
-      const response = await API.put("/update-image", {
-        headers: {
-          Authorization: token,
-          "Content-Type": "multipart/form-data",
+      await API.post(
+        "/upload-profile-image",
+        {
+          cloudinaryResponse: imageResponse,
+          userId: userId,
         },
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      console.log("Response from server:", data);
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
     } catch (error) {
-      console.error("Error uploading profile picture:", error);
-
-      // Handle error (update UI, show an error message, etc.)
+      console.error("Error uploading image:", JSON.stringify(error));
     }
   };
 
   return (
-    <View style={styles.mainContainer}>
-      <Button title="Select Image" onPress={handleFileChange} />
-      {selectedFile && (
-        <Image
-          source={{ uri: selectedFile.uri }}
-          style={{ width: 200, height: 200 }}
-        />
-      )}
-      <Button title="Upload Profile Picture" onPress={handleUpload} />
+    <View>
+      <View style={styles.backgroundcontainer}>
+        <Background />
+      </View>
+
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={openImageLibrary}
+          style={styles.uploadBtnContainer}
+        >
+          {profileImage ? (
+            <View>
+              <Image source={{ uri: profileImage }} style={styles.image} />
+            </View>
+          ) : (
+            <Text style={styles.uploadBtnText}>Change Profile Image</Text>
+          )}
+        </TouchableOpacity>
+        {progress ? <Text>{progress}</Text> : null}
+
+        <Text style={styles.skip}>Skip</Text>
+        {profileImage ? (
+          <Text
+            onPress={uploadProfileImage}
+            style={[
+              styles.skip,
+              { backgroundColor: "green", color: "white", borderRadius: 8 },
+            ]}
+          >
+            UPLOAD
+          </Text>
+        ) : null}
+        {/* Display user data */}
+        <Text style={styles.userName}>{userName}</Text>
+        <Text style={styles.userEmail}>{userEmail}</Text>
+      </View>
+      <View style={styles.menucontainer}>
+        <Menu />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    top: 200,
+  container: {
+    top: 100,
     justifyContent: "center",
     alignItems: "center",
+  },
+  uploadBtnContainer: {
+    height: 125,
+    width: 125,
+    borderRadius: 125 / 2,
+    justifyContent: "center",
+    alignItems: "center",
+    borderStyle: "dashed",
+    borderWidth: 1,
+  },
+  uploadBtnText: {
+    textAlign: "center",
+    fontSize: 16,
+    opacity: 0.3,
+    fontWeight: "bold",
+  },
+  image: {
+    top: -75,
+    right: -75,
+    width: 150,
+    height: 150,
+    borderRadius: 125 / 2,
+    position: "absolute",
+  },
+  skip: {
+    textAlign: "center",
+    padding: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    opacity: 0.5,
+  },
+  menucontainer: {
+    top: 530,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginVertical: 10,
+  },
+
+  userEmail: {
+    fontSize: 16,
+    opacity: 0.7,
   },
 });
 

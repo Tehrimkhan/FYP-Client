@@ -73,9 +73,6 @@ const YouPage = () => {
     // const [image1, image2] = await Promise.all([uploadImage(_file, setProgress), uploadImage(_file, setProgress), uploadImage(_file, setProgress), uploadImage(_file, setProgress),]);
     const token = API.defaults.headers.common["Authorization"];
 
-    // Assuming you have the userId available in your component's state or props
-    // Replace this with the actual userId
-
     try {
       const imageResponse = await uploadImage(_file, setProgress);
       console.log("Cloudinary response sent to the backend", imageResponse);

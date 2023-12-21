@@ -19,7 +19,7 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
   const navigation = useNavigation();
   const [sortedPosts, setSortedPosts] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-
+  // console.log("AdsCrad", userId);
   const handlePostPress = (post, myPostScreen, userId) => {
     navigation.navigate("PostDetailScreen", { post, myPostScreen, userId });
   };
@@ -46,17 +46,14 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
     let sortedPosts = [...filterAndSortPosts()];
 
     if (option === "lowToHigh") {
-      // Sort by rent in ascending order
       sortedPosts = sortedPosts.sort(
         (a, b) => parseInt(a.rent) - parseInt(b.rent)
       );
     } else if (option === "highToLow") {
-      // Sort by rent in descending order
       sortedPosts = sortedPosts.sort(
         (a, b) => parseInt(b.rent) - parseInt(a.rent)
       );
     } else if (option === "alphabeticalOrder") {
-      // Sort alphabetically by the name property
       sortedPosts = sortedPosts.sort((a, b) => a.name?.localeCompare(b.name));
     }
 

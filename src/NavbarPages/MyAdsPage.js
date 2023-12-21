@@ -34,7 +34,6 @@ const MyAdsPage = () => {
         <Text style={styles.lengthText}>Total Posts: {posts?.length}</Text>
         <View style={styles.scrollContainer}>
           {isLoading ? (
-            // Display a loading image or indicator
             <Image
               source={require("../../assets/Spinner-1s-200px.gif")}
               style={{ width: 50, height: 50 }}
@@ -73,12 +72,12 @@ const styles = StyleSheet.create({
     height: 81,
   },
   innerContainer: {
-    top: -190,
+    top: -15,
   },
   scrollContainer: {
     justifyContent: "center",
     alignItems: "center",
-    height: 294,
+    height: 470,
     marginTop: 50,
     bottom: 40,
   },
@@ -93,6 +92,9 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0, 0, 0, 0.75)",
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
+  },
+  scrollviewContainer: {
+    height: 200,
   },
   bottomMenu: {
     position: "absolute",

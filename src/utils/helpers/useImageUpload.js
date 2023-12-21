@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 const uploadUrl = "https://api.cloudinary.com/v1_1/dihvjdw0r/image/upload/";
 
@@ -8,7 +8,6 @@ export function useImageUpload() {
     data.append("file", file);
     data.append("upload_preset", "m5adwqsh");
     data.append("cloud_name", "dihvjdw0r");
-
 
     const config = {
       headers: {
@@ -25,10 +24,12 @@ export function useImageUpload() {
     };
 
     try {
-      const response = await axios.post(uploadUrl, data, config).catch(error => {
-        console.log('error', JSON.stringify(error));
-      });
-    
+      const response = await axios
+        .post(uploadUrl, data, config)
+        .catch((error) => {
+          console.log("error", JSON.stringify(error));
+        });
+
       return response.data;
     } catch (error) {
       throw error;

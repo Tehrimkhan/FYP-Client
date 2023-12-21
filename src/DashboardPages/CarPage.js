@@ -9,31 +9,31 @@ import Background from "../Component/Background";
 
 const CarPage = ({ route }) => {
   const { carPosts } = route.params;
-  // const [userIdArray] = useContext(AuthContext);
-  // const userId = userIdArray?.data?.user?._id;
-  const [
-    userId,
-    setUserId,
-    userName,
-    setUserName,
-    userImage,
-    setUserImage,
-    userEmail,
-    setUserEmail,
-  ] = useContext(AuthContext);
+  const [userIdArray] = useContext(AuthContext);
+  const userId = userIdArray?.data?.user?._id;
+  // const [
+  //   userId,
+  //   // setUserId,
+  //   // userName,
+  //   // setUserName,
+  //   // userImage,
+  //   // setUserImage,
+  //   // userEmail,
+  //   // setUserEmail,
+  // ] = useContext(AuthContext);
+  // console.log("CarPage ID", userId);
   const [searchText, setSearchText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCarPosts = async () => {
       setIsLoading(true);
-      // Replace the following line with your actual data fetching logic
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setIsLoading(false);
     };
 
     fetchCarPosts();
-  }, [searchText]); // Add searchText as a dependency
+  }, [searchText]);
 
   return (
     <View style={styles.container}>
@@ -52,7 +52,6 @@ const CarPage = ({ route }) => {
 
         <View style={styles.scrollContainer}>
           {isLoading ? (
-            // Display a loading image or indicator
             <Image
               source={require("../../assets/Spinner-1s-200px.gif")}
               style={{ width: 50, height: 50 }}

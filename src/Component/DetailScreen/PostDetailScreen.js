@@ -22,6 +22,9 @@ import { API } from "../../api/config";
 
 const PostDetailScreen = ({ route }) => {
   const { post, myPostScreen, userId } = route.params;
+  const token = API.defaults.headers.common["Authorization"];
+  // console.log(token);
+  // console.log(userId);
   // console.log("userID from postDetail", userId);
   const navigation = useNavigation();
 
@@ -35,9 +38,8 @@ const PostDetailScreen = ({ route }) => {
     if (post?.status === "rejected") {
       const deleteAlert = setTimeout(() => {
         alert("This post will be deleted in one day.");
-      }, 24 * 60 * 60 * 1000); // Show alert after one day
+      }, 24 * 60 * 60 * 1000);
 
-      // Clear the timeout when the component unmounts
       return () => clearTimeout(deleteAlert);
     }
   }, [post?.status]);
@@ -60,12 +62,8 @@ const PostDetailScreen = ({ route }) => {
   //delete post
   const handleDeletePost = async (id) => {
     try {
-      const token = API.defaults.headers.common["Authorization"];
-      console.log(token);
-      // Check if the token is present in the headers
       if (!token || token.trim() === "") {
         alert("Authorization token missing. Please log in.");
-        // Redirect the user to the login screen or handle the absence of the token accordingly
         return;
       }
       const response = await API.delete(`/post/delete-post/${id}`, {
@@ -89,10 +87,39 @@ const PostDetailScreen = ({ route }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
 
-  const handleAddComment = () => {
-    if (comment.trim() !== "") {
-      setComments([...comments, comment]);
-      setComment(""); // Clear the comment input
+  useEffect(() => {
+    if (post?.reviews && post.reviews.length > 0) {
+      const extractedComments = post.reviews.map((review) => review.comment);
+      setComments(extractedComments);
+    }
+  }, [post]);
+
+  const handleAddComment = async () => {
+    try {
+      const response = await API.put(
+        `/post/comments/${post?._id}`,
+        {
+          comment: comment,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        // Update the local state with the new comment
+        setComments((prevComments) => [...prevComments, comment]);
+        setComment("");
+        // alert("Comment added successfully!");
+      } else {
+        console.error(response.data.message);
+        alert("Error adding comment");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error adding comment");
     }
   };
   return (
@@ -357,7 +384,8 @@ const styles = StyleSheet.create({
     color: "red",
     fontFamily: "appfont",
     textAlign: "center",
-    marginTop: 20,
+    marginTop: 10,
+    marginBottom: 10,
   },
   ownPostContainer: {
     top: 40,

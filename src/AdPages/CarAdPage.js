@@ -41,16 +41,37 @@ const CarAdPage = ({ navigation }) => {
       if (!make || !name || !model || !variant || !rent || !description) {
         alert("Please Fill All Post Fields!");
       } else {
-        const paymentData = {
-          make,
-          name,
-          model,
-          variant,
-          rent,
-          description,
-        };
+        // const paymentData = {
+        //   make,
+        //   name,
+        //   model,
+        //   variant,
+        //   rent,
+        //   description,
+        // };
 
-        navigation.navigate("PaymentPage", { paymentData });
+        // navigation.navigate("PaymentPage", { paymentData });
+        const createPostResponse = await API.post(
+          "/post/create-post",
+          {
+            title,
+            name,
+            model,
+            make,
+            variant,
+            rent,
+            description,
+          },
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        Alert.alert(createPostResponse?.data.message);
+        Alert.alert("Post Will Be Published After Admin Approval");
+
+        navigation.navigate("Dashboard");
       }
     } catch (error) {
       alert(
@@ -64,10 +85,8 @@ const CarAdPage = ({ navigation }) => {
     <View>
       <Background />
       <ScrollView style={styles.container}>
-        {/* Display selected images */}
-        {/* Image upload section */}
         <SelectImage onImagesSelected={handleImagesSelected} />
-        {/* Set the title as read-only */}
+
         <TextInput
           style={styles.input}
           onChangeText={(text) => setName(text)}
@@ -153,11 +172,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#32A1A8",
     borderRadius: 5,
-    paddingVertical: 10, // Adjust vertical padding as needed
-    paddingHorizontal: 20, // Adjust horizontal padding as needed
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   button: {
-    marginLeft: 5, // Add left margin to create space between icon and text
+    marginLeft: 5,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -165,11 +184,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 80,
     marginBottom: 5,
-    paddingVertical: 10, // Adjust vertical padding as needed
-    paddingHorizontal: 20, // Adjust horizontal padding as needed
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   buttonText: {
-    marginLeft: 5, // Add left margin to create space between icon and text
+    marginLeft: 5,
     fontFamily: "appfont",
     fontSize: 18,
     color: "white",

@@ -27,13 +27,13 @@ const LoginPage = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [agree, setAgree] = useState(false);
   const [userId, setUserId] = useState(null);
-
+  // console.log("loginapasd", userId);
   const submit = async () => {
     try {
       if (!email || !password) {
         Alert.alert("Please Fill All Fields!");
       } else {
-        console.log("DATA=>>", email, password);
+        // console.log("DATA=>>", email, password);
         const data = await API.post(
           "login",
           {
@@ -58,7 +58,7 @@ const LoginPage = ({ navigation }) => {
 
           // UPDATE userId STATE HERE
           setUserId(data.data.user._id);
-
+          // console.log(data.data.user._id);
           // Pass userId as a prop to the Dashboard screen
           navigation.navigate("Dashboard", { userId: userId });
         } else {

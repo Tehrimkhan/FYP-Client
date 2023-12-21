@@ -55,7 +55,7 @@ const Menu = () => {
 
         <TouchableOpacity
           style={[styles.buttonStyle, { width: buttonWidth }]} // Set the width dynamically
-          onPress={() => navigation.navigate("YouPage")}
+          onPress={() => navigation.navigate("MyPage")}
           // onPress={() => {
           //   localStorage.removeItem("@auth");
           //   navigation.navigate("YouPage");

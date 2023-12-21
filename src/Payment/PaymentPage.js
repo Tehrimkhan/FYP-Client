@@ -48,39 +48,6 @@ const PaymentPage = () => {
           alert("Error processing payment");
         } else {
           alert("Payment Successful!");
-          const {
-            postImages,
-            title,
-            name,
-            model,
-            make,
-            variant,
-            rent,
-            description,
-          } = paymentData;
-
-          const createPostResponse = await API.post(
-            "/post/create-post",
-            {
-              postImages,
-              title,
-              name,
-              model,
-              make,
-              variant,
-              rent,
-              description,
-            },
-            {
-              headers: {
-                Authorization: token,
-              },
-            }
-          );
-
-          alert(createPostResponse?.data.message);
-          alert("Post Will Be Published After Admin Approval");
-
           navigation.navigate("Dashboard");
         }
       } catch (error) {
