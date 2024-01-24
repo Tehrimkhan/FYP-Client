@@ -7,6 +7,7 @@ import apartlogo from "../../assets/apartlogo.png";
 import applogo from "../../assets/applogo.png";
 import furnlogo from "../../assets/furnlogo.png";
 import Menu from "../Component/Menu";
+import Background from "../Component/Background";
 
 const SellerPage = ({ navigation }) => {
   const navigateToScreen = (screenName) => {
@@ -19,9 +20,10 @@ const SellerPage = ({ navigation }) => {
 
   return (
     <View style={styles.bgContainer}>
+      <Background />
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => backButton()}>
-          <Ionicons name="arrow-back-circle-sharp" size={25} color="white" />
+          <Ionicons name="arrow-back-circle-sharp" size={25} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerText}>WHAT ARE YOU OFFERING?</Text>
       </View>
@@ -57,16 +59,16 @@ const SellerPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   bgContainer: {
     flex: 1,
-    backgroundColor: "#D2C6C6",
-    justifyContent: "center",
-    alignItems: "center",
+    position: "relative", // Change to relative
+    backgroundColor: "#f0f0f0",
   },
   headerContainer: {
     flexDirection: "row",
-    backgroundColor: "#8A7A7A",
+
     height: 55,
-    width: 360,
+    width: "100%", // Change to 100%
     alignItems: "center",
+    paddingHorizontal: 10,
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
@@ -76,21 +78,31 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     borderRadius: 10,
-    bottom: 80,
+    position: "absolute", // Position absolutely at the top
+    top: 170,
+    left: 0,
+    right: 0,
   },
   headerText: {
-    color: "#FFFFFF",
+    color: "#9d626b",
     fontSize: 15,
-    marginLeft: 50,
+    fontWeight: "bold",
+    marginLeft: 60,
   },
   btnContainer: {
-    bottom: 30,
+    flex: 1,
+    justifyContent: "center", // Center buttons vertically
+    alignItems: "center", // Center buttons horizontally
+    marginBottom: 200,
     right: 10,
   },
   menuContainer: {
-    //added
-    top: 100,
-    right: 200,
+    position: "absolute",
+    bottom: 15,
+    left: 0,
+    right: 0,
+    borderTopWidth: 2,
+    borderTopColor: "#DDDDDD",
   },
 });
 

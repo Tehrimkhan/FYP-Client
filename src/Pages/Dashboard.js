@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   buttonContainer: {
-    marginTop: 5,
+    marginTop: 20,
   },
   carbuttonStyle: {
     backgroundColor: "#D8D6F7",
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   appbuttonStyle: {
     backgroundColor: "#FED9EB",
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   apartbuttonStyle: {
     backgroundColor: "#B3DFAC",
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   furnbuttonStyle: {
     backgroundColor: "#FFE2AA",
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   buttonText: {
     fontSize: 14,

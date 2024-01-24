@@ -1,10 +1,16 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import Background from "../Component/Background";
 import * as ImagePicker from "expo-image-picker";
 import { API } from "../api/config";
 import Menu from "../Component/Menu";
-import axios from "axios";
 import { useImageUpload } from "../utils/helpers";
 import { AuthContext } from "../context/authContext";
 
@@ -15,7 +21,7 @@ const MyPage = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userIdArray] = useContext(AuthContext);
   const userId = userIdArray?.data?.user?._id;
-  // console.log("You", userId);
+
   useEffect(() => {
     getUserProfile();
   }, []);
@@ -47,7 +53,7 @@ const MyPage = () => {
       });
 
       if (!response.cancelled) {
-        console.log(response);
+        // console.log(response);
         setProfileImage(response.assets[0].uri);
       }
     } catch (error) {
@@ -92,12 +98,11 @@ const MyPage = () => {
   };
 
   return (
-    <View>
-      <View style={styles.backgroundcontainer}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.backgroundContainer}>
         <Background />
       </View>
-
-      <View style={styles.container}>
+      <View style={styles.innerContainer}>
         <TouchableOpacity
           onPress={openImageLibrary}
           style={styles.uploadBtnContainer}
@@ -112,18 +117,19 @@ const MyPage = () => {
         </TouchableOpacity>
         {progress ? <Text>{progress}</Text> : null}
 
-        <Text style={styles.skip}>Skip</Text>
-        {profileImage ? (
-          <Text
+        {profileImage && (
+          <TouchableOpacity
             onPress={uploadProfileImage}
             style={[
-              styles.skip,
-              { backgroundColor: "green", color: "white", borderRadius: 8 },
+              styles.uploadBtnText,
+              styles.uploadBtn,
+              { backgroundColor: "green", borderRadius: 8 },
             ]}
           >
-            UPLOAD
-          </Text>
-        ) : null}
+            <Text style={{ color: "white" }}>UPLOAD</Text>
+          </TouchableOpacity>
+        )}
+
         {/* Display user data */}
         <Text style={styles.userName}>{userName}</Text>
         <Text style={styles.userEmail}>{userEmail}</Text>
@@ -131,22 +137,34 @@ const MyPage = () => {
       <View style={styles.menucontainer}>
         <Menu />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    top: 100,
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  backgroundContainer: {
+    flex: 1,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "#f0f0f0",
+  },
+  innerContainer: {
+    top: -100,
     justifyContent: "center",
     alignItems: "center",
   },
   uploadBtnContainer: {
-    height: 125,
-    width: 125,
+    height: 135,
+    width: 135,
     borderRadius: 125 / 2,
-    justifyContent: "center",
-    alignItems: "center",
     borderStyle: "dashed",
     borderWidth: 1,
   },
@@ -155,35 +173,38 @@ const styles = StyleSheet.create({
     fontSize: 16,
     opacity: 0.3,
     fontWeight: "bold",
+    marginTop: 10,
   },
   image: {
-    top: -75,
-    right: -75,
     width: 150,
     height: 150,
-    borderRadius: 125 / 2,
-    position: "absolute",
+    borderRadius: 75,
+    marginTop: -10, // Adjust this margin to move the image
+    right: 10,
   },
-  skip: {
-    textAlign: "center",
+  uploadBtn: {
+    marginTop: 20,
     padding: 10,
     fontSize: 16,
-    fontWeight: "bold",
-    textTransform: "uppercase",
     opacity: 0.5,
   },
   menucontainer: {
-    top: 530,
+    position: "absolute",
+    bottom: 15,
+    left: 0,
+    right: 0,
+    borderTopWidth: 2,
+    borderTopColor: "#DDDDDD",
   },
   userName: {
     fontSize: 18,
     fontWeight: "bold",
-    marginVertical: 10,
+    marginVertical: 5, // Adjust this margin to move the name
   },
-
   userEmail: {
     fontSize: 16,
     opacity: 0.7,
+    marginBottom: 50, // Adjust this margin to move the email
   },
 });
 

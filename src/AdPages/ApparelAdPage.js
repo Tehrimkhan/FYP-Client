@@ -89,7 +89,7 @@ const ApparelAdPage = ({ navigation }) => {
       );
       console.error(error);
     } finally {
-      setIsLoading(false); // Set loading state to false after completion (success or error)
+      setIsLoading(false);
     }
   };
   return (

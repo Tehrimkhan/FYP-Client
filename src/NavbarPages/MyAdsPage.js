@@ -72,14 +72,16 @@ const styles = StyleSheet.create({
     height: 81,
   },
   innerContainer: {
-    top: -15,
+    top: -90,
   },
+
   scrollContainer: {
+    height: 500,
+    marginTop: 5,
+    bottom: -20,
+    // bottom: 50,
     justifyContent: "center",
     alignItems: "center",
-    height: 470,
-    marginTop: 50,
-    bottom: 40,
   },
   lengthText: {
     top: 15,

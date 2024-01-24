@@ -96,6 +96,11 @@ const PostDetailScreen = ({ route }) => {
 
   const handleAddComment = async () => {
     try {
+      if (!comment || comment.trim() === "") {
+        alert("Comment cannot be empty");
+        return;
+      }
+      // console.log("postid ", post?._id);
       const response = await API.put(
         `/post/comments/${post?._id}`,
         {
@@ -109,10 +114,9 @@ const PostDetailScreen = ({ route }) => {
       );
 
       if (response.data.success) {
-        // Update the local state with the new comment
         setComments((prevComments) => [...prevComments, comment]);
         setComment("");
-        // alert("Comment added successfully!");
+        alert("Comment added successfully!");
       } else {
         console.error(response.data.message);
         alert("Error adding comment");
@@ -122,6 +126,7 @@ const PostDetailScreen = ({ route }) => {
       alert("Error adding comment");
     }
   };
+
   return (
     <View>
       <Ionicons
@@ -297,7 +302,8 @@ const styles = StyleSheet.create({
   },
   outerContainer: {
     top: 30,
-    height: 540,
+    // height:540
+    height: 580,
     width: 380,
     backgroundColor: "#D9D9D9",
     borderRadius: 25,
@@ -384,11 +390,11 @@ const styles = StyleSheet.create({
     color: "red",
     fontFamily: "appfont",
     textAlign: "center",
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 5,
   },
   ownPostContainer: {
-    top: 40,
+    top: 65,
   },
   // sellerContainer: {
   //   top: 20,
@@ -447,8 +453,9 @@ const styles = StyleSheet.create({
   },
   bottomMenu: {
     position: "absolute",
-    bottom: -50,
+    //bottom: -90,
     // bottom: 160,
+    bottom: -70,
     left: 0,
     right: 0,
     borderTopWidth: 2,

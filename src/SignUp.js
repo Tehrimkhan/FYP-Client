@@ -45,9 +45,16 @@ const SignUp = ({ navigation }) => {
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
     const isPasswordMatch = password === confirmPassword;
+
     try {
       if (!name || !email || !password || !confirmPassword) {
         Alert.alert("Please Fill All Fields!");
+      } else if (!isEmailValid) {
+        Alert.alert("Invalid email format!");
+      } else if (!isPasswordValid) {
+        Alert.alert("Password must be at least 6 characters long!");
+      } else if (!isPasswordMatch) {
+        Alert.alert("Password and Confirm Password do not match!");
       } else {
         console.log("DATA=>>", name, email, password, confirmPassword);
         const data = await API.post("/register", {
@@ -59,8 +66,8 @@ const SignUp = ({ navigation }) => {
         console.log("Check", data);
         if (data && data.data) {
           alert(data);
-          console.log("DATA=>>", name, email, password, confirmPassword);
-          Alert.alert("You are Signed In!");
+          // console.log("DATA=>>", name, email, password, confirmPassword);
+          Alert.alert("You are Registered SucessFully!");
           navigation.navigate("LoginPage");
         } else {
           alert("data data is undefined");

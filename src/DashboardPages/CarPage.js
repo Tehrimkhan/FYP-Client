@@ -86,20 +86,23 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   innerContainer: {
-    // top: -15,
+    top: -90,
   },
   textContainer: {
-    top: -35,
+    //-35 emulator
+    //expo
+    top: 20,
   },
   scrollContainer: {
-    height: 480,
-    marginTop: 10,
-    bottom: 50,
+    height: 500,
+    marginTop: 5,
+    bottom: -20,
+    // bottom: 50,
     justifyContent: "center",
     alignItems: "center",
   },
   lengthText: {
-    left: 15,
+    left: 20,
   },
   bottomMenu: {
     position: "absolute",

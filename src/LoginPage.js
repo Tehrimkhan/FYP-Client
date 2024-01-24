@@ -66,7 +66,7 @@ const LoginPage = ({ navigation }) => {
         }
       }
     } catch (error) {
-      alert(error.data ? error.data.data.message : "Unknown error occurred");
+      alert(error.data ? error.data.data.message : "Invalid Credentials!");
       console.log(error);
     }
   };

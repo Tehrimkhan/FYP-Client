@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   menucontainer: {
-    top: 530,
+    top: 500,
   },
   userName: {
     fontSize: 18,
