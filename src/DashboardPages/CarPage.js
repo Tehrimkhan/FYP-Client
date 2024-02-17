@@ -1,5 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  KeyboardAvoidingView,
+} from "react-native";
 import SearchBar from "../Component/Home/SearchBar";
 import carlogo from "../../assets/carlogo.png";
 import Menu from "../Component/Menu";
@@ -11,20 +18,10 @@ const CarPage = ({ route }) => {
   const { carPosts } = route.params;
   const [userIdArray] = useContext(AuthContext);
   const userId = userIdArray?.data?.user?._id;
-  // const [
-  //   userId,
-  //   // setUserId,
-  //   // userName,
-  //   // setUserName,
-  //   // userImage,
-  //   // setUserImage,
-  //   // userEmail,
-  //   // setUserEmail,
-  // ] = useContext(AuthContext);
-  // console.log("CarPage ID", userId);
   const [searchText, setSearchText] = useState("");
+  const [sortOption, setSortOption] = useState(null); // Add sort option state
   const [isLoading, setIsLoading] = useState(true);
-
+  console.log("options", sortOption);
   useEffect(() => {
     const fetchCarPosts = async () => {
       setIsLoading(true);
@@ -33,42 +30,49 @@ const CarPage = ({ route }) => {
     };
 
     fetchCarPosts();
-  }, [searchText]);
+  }, [searchText, sortOption]);
 
   return (
     <View style={styles.container}>
-      <Background />
+      <View style={styles.bgcontainer}>
+        <Background />
+      </View>
+
+      <KeyboardAvoidingView>
+        <View style={styles.innerContainer}>
+          {/* <View style={styles.textContainer}>
+          <Text style={styles.lengthText}>Total Posts: {carPosts?.length}</Text>
+        </View> */}
+
+          <View style={styles.scrollContainer}>
+            {isLoading ? (
+              <Image
+                source={require("../../assets/Spinner-1s-200px.gif")}
+                style={{ width: 50, height: 50 }}
+              />
+            ) : (
+              <ScrollView>
+                <AdsCards
+                  posts={carPosts}
+                  userId={userId}
+                  searchText={searchText}
+                  sortOption={sortOption}
+                />
+              </ScrollView>
+            )}
+          </View>
+        </View>
+        <View style={styles.bottomMenu}>
+          <Menu />
+        </View>
+      </KeyboardAvoidingView>
       <View style={styles.searchContainer}>
         <SearchBar
           setSearchText={(value) => setSearchText(value)}
           imageSource={carlogo}
           placeholder="SEARCH YOUR CAR"
+          setSortOption={setSortOption} // Pass setSortOption function
         />
-      </View>
-      <View style={styles.innerContainer}>
-        <View style={styles.textContainer}>
-          <Text style={styles.lengthText}>Total Posts: {carPosts?.length}</Text>
-        </View>
-
-        <View style={styles.scrollContainer}>
-          {isLoading ? (
-            <Image
-              source={require("../../assets/Spinner-1s-200px.gif")}
-              style={{ width: 50, height: 50 }}
-            />
-          ) : (
-            <ScrollView>
-              <AdsCards
-                posts={carPosts}
-                userId={userId}
-                searchText={searchText}
-              />
-            </ScrollView>
-          )}
-        </View>
-      </View>
-      <View style={styles.bottomMenu}>
-        <Menu />
       </View>
     </View>
   );
@@ -77,27 +81,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  bgcontainer: { position: "absolute" },
   searchContainer: {
     position: "absolute",
     top: 115,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 10,
+    zIndex: 1, // Ensure the SearchBar is above other components
   },
   innerContainer: {
-    top: -90,
+    paddingTop: 280, // Add padding to make room for SearchBar
   },
   textContainer: {
-    //-35 emulator
+    top: -30,
     //expo
-    top: 20,
+    //top: 20,
   },
   scrollContainer: {
+    //height: 500,
     height: 500,
     marginTop: 5,
-    bottom: -20,
-    // bottom: 50,
+    //bottom: -20,
+    bottom: 50,
     justifyContent: "center",
     alignItems: "center",
   },

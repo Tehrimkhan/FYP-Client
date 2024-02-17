@@ -7,139 +7,125 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Modal,
-  Pressable,
 } from "react-native";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
-
+import { FontAwesome } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 
-const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
+const AdsCards = ({ posts, myPostScreen, userId, searchText, sortOption }) => {
   const navigation = useNavigation();
-  const [sortedPosts, setSortedPosts] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  // console.log("AdsCrad", userId);
+  const [searchPosts, setSearchedPosts] = useState([]);
+  console.log("adscard", sortOption);
+
   const handlePostPress = (post, myPostScreen, userId) => {
     navigation.navigate("PostDetailScreen", { post, myPostScreen, userId });
   };
 
-  const filterAndSortPosts = () => {
-    const filteredPosts = posts.filter((post) => {
+  const SearchAndSortPosts = () => {
+    const SearchedPosts = posts.filter((post) => {
       const name = post?.name?.toLowerCase() || "";
       const make = post?.make?.toLowerCase() || "";
       const model = post?.model?.toLowerCase() || "";
       const rent = post?.rent?.toLowerCase() || "";
 
+      const area = post?.area?.toLowerCase() || "";
+      const room = post?.room?.toLowerCase() || "";
+
       return (
         name.includes(searchText.toLowerCase()) ||
         make.includes(searchText.toLowerCase()) ||
         model.includes(searchText.toLowerCase()) ||
+        area.includes(searchText.toLowerCase()) ||
+        room.includes(searchText.toLowerCase()) ||
         rent.includes(searchText.toLowerCase())
       );
     });
 
-    return sortedPosts.length ? sortedPosts : filteredPosts;
+    return searchPosts.length ? searchPosts : SearchedPosts;
   };
 
-  const handleSortOption = (option) => {
-    let sortedPosts = [...filterAndSortPosts()];
+  const searchedAndSortedPosts = SearchAndSortPosts();
 
-    if (option === "lowToHigh") {
-      sortedPosts = sortedPosts.sort(
-        (a, b) => parseInt(a.rent) - parseInt(b.rent)
-      );
-    } else if (option === "highToLow") {
-      sortedPosts = sortedPosts.sort(
-        (a, b) => parseInt(b.rent) - parseInt(a.rent)
-      );
-    } else if (option === "alphabeticalOrder") {
-      sortedPosts = sortedPosts.sort((a, b) => a.name?.localeCompare(b.name));
+  const filteredPosts = () => {
+    if (sortOption === "highToLow") {
+      return searchedAndSortedPosts.sort((a, b) => b.rent - a.rent);
     }
-
-    setSortedPosts(sortedPosts);
-    setModalVisible(false);
+    if (sortOption === "lowToHigh") {
+      return searchedAndSortedPosts.sort((a, b) => a.rent - b.rent);
+    }
+    if (sortOption === "rating") {
+      return searchedAndSortedPosts.sort((a, b) => b.rating - a.rating);
+    }
   };
+
+  const sortedPosts = filteredPosts();
 
   return (
-    <View>
-      <View style={styles.container}>
-        {filterAndSortPosts().map((post, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => handlePostPress(post, myPostScreen, userId)}
-          >
-            <View style={styles.innerContainer} key={index}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                pagingEnabled
-              >
-                {post?.postImages.map((image, imageIndex) => (
-                  <Image
-                    key={imageIndex}
-                    source={{ uri: image.url }}
-                    style={styles.card}
-                    resizeMode="cover"
-                    onError={(e) =>
-                      console.log("Error loading image:", e.nativeEvent.error)
-                    }
-                  />
-                ))}
-              </ScrollView>
-              <View style={styles.innerTextContainer}>
-                <View style={styles.titleContainer}>
-                  <Text style={styles.titleHeading}>{post?.name}</Text>
-                  <Text style={styles.titleHeading}>
-                    {" "}
-                    {post.room
-                      ? ` Room: ${post.room}`
-                      : ` Model: ${post.model}`}
-                  </Text>
-                  <Text style={styles.titlerentHeading}>
-                    {" "}
-                    | Rent: {post?.rent}
-                  </Text>
-                </View>
-                <View style={styles.postDetailsContainer}>
-                  <View style={styles.ratingContainer}>
-                    {/* Your rating icons or components go here */}
+    <View style={styles.container}>
+      {searchedAndSortedPosts.length > 0 || sortedPosts.length > 0 ? (
+        (sortOption === "highToLow" ? sortedPosts : searchedAndSortedPosts).map(
+          (post, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => handlePostPress(post, myPostScreen, userId)}
+            >
+              <View style={styles.innerContainer} key={index}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  pagingEnabled
+                >
+                  {post?.postImages.map((image, imageIndex) => (
+                    <Image
+                      key={imageIndex}
+                      source={{ uri: image.url }}
+                      style={styles.card}
+                      resizeMode="cover"
+                      onError={(e) =>
+                        console.log("Error loading image:", e.nativeEvent.error)
+                      }
+                    />
+                  ))}
+                </ScrollView>
+                <View style={styles.innerTextContainer}>
+                  <View style={styles.titleContainer}>
+                    <Text style={styles.titleHeading}>{post?.name}</Text>
+                    <Text style={styles.titleHeading}>
+                      {post.room
+                        ? ` Room: ${post.room}`
+                        : ` Model: ${post.model}`}
+                    </Text>
+                    <Text style={styles.titlerentHeading}>
+                      | Rent: {post?.rent}
+                    </Text>
                   </View>
-                  <Text style={styles.postDetailsText}>
-                    {moment(post?.createdAt).format("DD:MM:YYYY")}
-                  </Text>
+                  <View style={styles.postDetailsContainer}>
+                    <View style={styles.ratingContainer}>
+                      <Text style={styles.ratingText}>
+                        Rating: {post?.rating}
+                      </Text>
+                      <FontAwesome
+                        name="star"
+                        size={20}
+                        left={5}
+                        color="#FFD700"
+                      />
+                    </View>
+                    <View>
+                      <Text style={styles.postDetailsText}>
+                        {moment(post?.createdAt).format("DD:MM:YYYY")}
+                      </Text>
+                    </View>
+                  </View>
                 </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* Modal for filter options */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(!modalVisible)}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <TouchableOpacity onPress={() => handleSortOption("highToLow")}>
-              <Text style={styles.sortOption}>High to Low Rent</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => handleSortOption("lowToHigh")}>
-              <Text style={styles.sortOption}>Low to High Rent</Text>
-            </TouchableOpacity>
-            <Pressable
-              style={styles.closeButton}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.closeButtonText}>Close</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
+          )
+        )
+      ) : (
+        <Text style={styles.nothingFoundText}>Nothing found</Text>
+      )}
     </View>
   );
 };
@@ -198,10 +184,22 @@ const styles = StyleSheet.create({
     bottom: 5,
   },
   ratingContainer: {
-    flexDirection: "row",
     // right: 55,
     left: 20,
     bottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  ratingText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+
+  nothingFoundText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

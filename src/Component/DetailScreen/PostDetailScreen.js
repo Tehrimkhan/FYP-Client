@@ -19,10 +19,12 @@ import {
 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { API } from "../../api/config";
+import Rating from "../Rating";
 
 const PostDetailScreen = ({ route }) => {
   const { post, myPostScreen, userId } = route.params;
   const token = API.defaults.headers.common["Authorization"];
+  const [rating, setRating] = useState(0);
   // console.log(token);
   // console.log(userId);
   // console.log("userID from postDetail", userId);
@@ -126,7 +128,43 @@ const PostDetailScreen = ({ route }) => {
       alert("Error adding comment");
     }
   };
+  const handleRatingChange = async (value) => {
+    try {
+      // Update the rating state when it changes
+      setRating(value);
 
+      // Submit the rating to the backend
+      await submitRating(post?._id, value);
+    } catch (error) {
+      console.error(error);
+      alert("Error submitting rating");
+    }
+  };
+
+  // Function to submit rating to backend
+  const submitRating = async (postId, ratingValue) => {
+    try {
+      const response = await API.put(
+        `/post/ratings/${postId}`,
+        {
+          rating: ratingValue,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        alert("Rating submitted successfully!");
+      } else {
+        alert("You've already rated this post!");
+      }
+    } catch (error) {
+      alert("You've already rated this post!");
+    }
+  };
   return (
     <View>
       <Ionicons
@@ -190,7 +228,7 @@ const PostDetailScreen = ({ route }) => {
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "center",
-                    top: 50,
+                    top: 40,
                     gap: 150,
                   }}
                 >
@@ -214,6 +252,9 @@ const PostDetailScreen = ({ route }) => {
                   Seller Name: {post?.postedBy?.name}
                 </Text>
               )}
+              <View style={styles.ratingContainer}>
+                <Rating rating={rating} onRatingChange={handleRatingChange} />
+              </View>
               <View style={styles.commentContainer}>
                 <View style={styles.commentInputContainer}>
                   <TextInput
@@ -302,8 +343,8 @@ const styles = StyleSheet.create({
   },
   outerContainer: {
     top: 30,
-    // height:540
-    height: 580,
+    height: 540,
+    //height: 580,
     width: 380,
     backgroundColor: "#D9D9D9",
     borderRadius: 25,
@@ -385,17 +426,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "appfont",
   },
-  ownPostText: {
-    fontSize: 15,
-    color: "red",
-    fontFamily: "appfont",
-    textAlign: "center",
-    marginTop: 5,
-    marginBottom: 5,
-  },
-  ownPostContainer: {
-    top: 65,
-  },
+
   // sellerContainer: {
   //   top: 20,
   //   width: 360,
@@ -403,8 +434,12 @@ const styles = StyleSheet.create({
   //   backgroundColor: "#FFFFFF",
   //   borderRadius: 25,
   // },
+  ratingContainer: {
+    top: 10,
+    left: 5,
+  },
   commentContainer: {
-    top: 60,
+    top: 10,
     width: 340,
     backgroundColor: "#FFFFFF",
     borderWidth: 2,
@@ -426,7 +461,7 @@ const styles = StyleSheet.create({
     height: "100%", // Match the height of the container
   },
   scrollviewContainer: {
-    top: 60,
+    top: 10,
     height: 100,
     width: 340,
     left: 10,
@@ -440,7 +475,7 @@ const styles = StyleSheet.create({
     gap: 5,
     alignItems: "center",
     justifyContent: "center", // Center the content horizontally
-    top: 85,
+    top: 20,
     width: 360,
     height: 35,
     backgroundColor: "#F41111",
@@ -453,18 +488,30 @@ const styles = StyleSheet.create({
   },
   bottomMenu: {
     position: "absolute",
-    //bottom: -90,
+    bottom: -52,
     // bottom: 160,
-    bottom: -70,
+    //phone
+    //bottom: -70,
     left: 0,
     right: 0,
     borderTopWidth: 2,
     borderTopColor: "#DDDDDD",
   },
+  ownPostText: {
+    fontSize: 15,
+    color: "red",
+    fontFamily: "appfont",
+    textAlign: "center",
+    marginTop: 5,
+    marginBottom: 1,
+  },
+  ownPostContainer: {
+    top: 5,
+  },
   statusStyle: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    padding: 5,
     borderRadius: 15,
     marginBottom: 10,
     marginLeft: 10,

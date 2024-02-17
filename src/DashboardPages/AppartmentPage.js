@@ -1,7 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
 import SearchBar from "../Component/Home/SearchBar";
 import applogo from "../../assets/apartlogo.png";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  KeyboardAvoidingView,
+} from "react-native";
 import Menu from "../Component/Menu";
 import Background from "../Component/Background";
 import AdsCards from "../Component/Banner/AdsCards";
@@ -12,16 +19,8 @@ const AppartmentPage = ({ route }) => {
   const { apartmentPosts } = route.params;
   // const [userIdArray] = useContext(AuthContext);
   // const userId = userIdArray?.data?.user?._id;
-  const [
-    userId,
-    setUserId,
-    userName,
-    setUserName,
-    userImage,
-    setUserImage,
-    userEmail,
-    setUserEmail,
-  ] = useContext(AuthContext);
+  const [userIdArray] = useContext(AuthContext);
+  const userId = userIdArray?.data?.user?._id;
   const [searchText, setSearchText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -38,39 +37,42 @@ const AppartmentPage = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Background />
+      <View style={styles.bgcontainer}>
+        <Background />
+      </View>
+      <KeyboardAvoidingView>
+        <View style={styles.innerContainer}>
+          {/* <View style={styles.textContainer}>
+          <Text style={styles.lengthText}>Total Posts: {carPosts?.length}</Text>
+        </View> */}
+
+          <View style={styles.scrollContainer}>
+            {isLoading ? (
+              <Image
+                source={require("../../assets/Spinner-1s-200px.gif")}
+                style={{ width: 50, height: 50 }}
+              />
+            ) : (
+              <ScrollView>
+                <AdsCards
+                  posts={apartmentPosts}
+                  userId={userId}
+                  searchText={searchText}
+                />
+              </ScrollView>
+            )}
+          </View>
+        </View>
+        <View style={styles.bottomMenu}>
+          <Menu />
+        </View>
+      </KeyboardAvoidingView>
       <View style={styles.searchContainer}>
         <SearchBar
           setSearchText={(value) => setSearchText(value)}
           imageSource={applogo}
-          placeholder="SEARCH YOUR APPARTMENT"
+          placeholder="SEARCH YOUR APARTMENT"
         />
-      </View>
-      <View style={styles.innerContainer}>
-        <View style={styles.textContainer}>
-          <Text style={styles.lengthText}>
-            Total Posts: {apartmentPosts?.length}
-          </Text>
-        </View>
-        <View style={styles.scrollContainer}>
-          {isLoading ? (
-            <Image
-              source={require("../../assets/Spinner-1s-200px.gif")}
-              style={{ width: 50, height: 50 }}
-            />
-          ) : (
-            <ScrollView>
-              <AdsCards
-                posts={apartmentPosts}
-                userId={userId}
-                searchText={searchText}
-              />
-            </ScrollView>
-          )}
-        </View>
-      </View>
-      <View style={styles.bottomMenu}>
-        <Menu />
       </View>
     </View>
   );
@@ -79,30 +81,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  bgcontainer: { position: "absolute" },
   searchContainer: {
     position: "absolute",
     top: 115,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 10,
+    zIndex: 1, // Ensure the SearchBar is above other components
   },
   innerContainer: {
-    top: -90,
+    paddingTop: 280, // Add padding to make room for SearchBar
   },
   textContainer: {
-    top: 20,
+    top: -30,
+    //expo
+    //top: 20,
   },
   scrollContainer: {
+    //height: 500,
     height: 500,
     marginTop: 5,
-    bottom: -20,
-    // bottom: 50,
+    //bottom: -20,
+    bottom: 50,
     justifyContent: "center",
     alignItems: "center",
   },
   lengthText: {
-    left: 25,
+    left: 20,
   },
   bottomMenu: {
     position: "absolute",

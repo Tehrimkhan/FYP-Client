@@ -31,7 +31,7 @@ const MyAdsPage = () => {
         <Text style={styles.heading}>MY ADS</Text>
       </View>
       <View style={styles.innerContainer}>
-        <Text style={styles.lengthText}>Total Posts: {posts?.length}</Text>
+        {/* <Text style={styles.lengthText}>Total Posts: {posts?.length}</Text> */}
         <View style={styles.scrollContainer}>
           {isLoading ? (
             <Image
@@ -72,7 +72,8 @@ const styles = StyleSheet.create({
     height: 81,
   },
   innerContainer: {
-    top: -90,
+    //top: -90,
+    top: -60,
   },
 
   scrollContainer: {

@@ -1,24 +1,23 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
   Image,
   TextInput,
   Modal,
   Pressable,
+  KeyboardAvoidingView,
+  Text,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { API } from "../../api/config";
 
 const SearchBar = ({
   setSearchText,
   imageSource,
   placeholder,
   setSortOption,
-  setSortedPosts,
 }) => {
   const [searchInput, setSearchInput] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -34,88 +33,94 @@ const SearchBar = ({
 
   const handleSortOption = (option) => {
     setSortOption(option);
-    setSortedPosts(null); // Reset sorted posts when a new sort option is selected
+
     setModalVisible(false);
   };
+
   return (
-    <View style={styles.searchContainer}>
-      <View style={styles.searchbuttonStyle}>
-        <View style={styles.buttonContent}>
-          <View style={styles.circle}></View>
-          <Image
-            source={imageSource}
-            style={styles.btnImageStyle}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={styles.inputStyle}
-            placeholder={placeholder}
-            value={searchInput}
-            onChangeText={(value) => setSearchInput(value)}
-            onSubmitEditing={() => setSearchText()}
-            placeholderTextColor="#888"
-          />
-          <TouchableOpacity onPress={handleSearch}>
-            <View style={styles.iconContainer}>
-              <FontAwesome5
-                name="search"
-                size={24}
-                color="black"
-                style={styles.icon}
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleFilter}>
-            <View style={styles.iconContainer}>
-              <Ionicons
-                name="filter"
-                size={24}
-                color="black"
-                style={styles.icon}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Modal for filter options */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(!modalVisible)}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <TouchableOpacity onPress={() => handleSortOption("highToLow")}>
-              <Text style={styles.sortOption}>High to Low Rent</Text>
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <View style={styles.searchContainer}>
+        <View style={styles.searchbuttonStyle}>
+          <View style={styles.buttonContent}>
+            <View style={styles.circle}></View>
+            <Image
+              source={imageSource}
+              style={styles.btnImageStyle}
+              resizeMode="contain"
+            />
+            <TextInput
+              style={styles.inputStyle}
+              placeholder={placeholder}
+              value={searchInput}
+              onChangeText={(value) => setSearchInput(value)}
+              onSubmitEditing={() => setSearchText()}
+              placeholderTextColor="#888"
+            />
+            <TouchableOpacity onPress={handleSearch}>
+              <View style={styles.iconContainer}>
+                <FontAwesome5
+                  name="search"
+                  size={24}
+                  color="black"
+                  style={styles.icon}
+                />
+              </View>
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => handleSortOption("lowToHigh")}>
-              <Text style={styles.sortOption}>Low to High Rent</Text>
+            <TouchableOpacity onPress={handleFilter}>
+              <View style={styles.iconContainer}>
+                <Ionicons
+                  name="filter"
+                  size={24}
+                  color="black"
+                  style={styles.icon}
+                />
+              </View>
             </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => handleSortOption("alphabeticalOrder")}
-            >
-              <Text style={styles.sortOption}>AlphabeticalOrder</Text>
-            </TouchableOpacity>
-            <Pressable
-              style={styles.closeButton}
-              onPress={() => {
-                handleSortOption(null); // Reset sort option when closing modal
-                setModalVisible(!modalVisible);
-              }}
-            >
-              <Text style={styles.closeButtonText}>Close</Text>
-            </Pressable>
           </View>
         </View>
-      </Modal>
-    </View>
+
+        {/* Modal for filter options */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(!modalVisible)}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <TouchableOpacity onPress={() => handleSortOption("highToLow")}>
+                <Text style={styles.sortOption}>High to Low Rent</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => handleSortOption("lowToHigh")}>
+                <Text style={styles.sortOption}>Low to High Rent</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => handleSortOption("rating")}>
+                <Text style={styles.sortOption}>High to Low Rating</Text>
+              </TouchableOpacity>
+
+              <Pressable
+                style={styles.closeButton}
+                onPress={() => {
+                  handleSortOption(null); // Reset sort option when closing modal
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   searchContainer: {
     alignItems: "center",
     marginTop: 20,
