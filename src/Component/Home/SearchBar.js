@@ -88,16 +88,16 @@ const SearchBar = ({
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <TouchableOpacity onPress={() => handleSortOption("highToLow")}>
+              {/* <TouchableOpacity onPress={() => handleSortOption("highToLow")}>
                 <Text style={styles.sortOption}>High to Low Rent</Text>
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => handleSortOption("lowToHigh")}>
                 <Text style={styles.sortOption}>Low to High Rent</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
               <TouchableOpacity onPress={() => handleSortOption("rating")}>
-                <Text style={styles.sortOption}>High to Low Rating</Text>
+                <Text style={styles.sortOption}>Low to High Rating</Text>
               </TouchableOpacity>
 
               <Pressable

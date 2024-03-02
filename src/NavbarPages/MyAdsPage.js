@@ -8,11 +8,13 @@ import Menu from "../Component/Menu";
 const MyAdsPage = () => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [sortOption, setSortOption] = useState(null);
   const [searchText, setSearchText] = useState("");
   const getUserPosts = async () => {
     try {
       const response = await API.get("/post/get-user-post");
-      setPosts(response?.data?.userPosts);
+      const userPosts = response?.data?.userPosts || [];
+      setPosts(userPosts);
       setIsLoading(false);
     } catch (error) {
       console.error("Error Fetching User Posts:", error);
@@ -31,23 +33,27 @@ const MyAdsPage = () => {
         <Text style={styles.heading}>MY ADS</Text>
       </View>
       <View style={styles.innerContainer}>
-        {/* <Text style={styles.lengthText}>Total Posts: {posts?.length}</Text> */}
-        <View style={styles.scrollContainer}>
-          {isLoading ? (
-            <Image
-              source={require("../../assets/Spinner-1s-200px.gif")}
-              style={{ width: 50, height: 50 }}
-            />
-          ) : (
-            <ScrollView>
-              <AdsCards
-                posts={posts}
-                myPostScreen={true}
-                searchText={searchText}
-              />
-            </ScrollView>
-          )}
-        </View>
+        {isLoading ? (
+          <Image
+            source={require("../../assets/Spinner-1s-200px.gif")}
+            style={{ width: 50, height: 50 }}
+          />
+        ) : (
+          <>
+            {posts.length === 0 ? ( // Check if posts array is empty
+              <Text style={styles.noPostText}>No posts found.</Text>
+            ) : (
+              <ScrollView>
+                <AdsCards
+                  posts={posts}
+                  myPostScreen={true}
+                  searchText={searchText}
+                  sortOption={sortOption}
+                />
+              </ScrollView>
+            )}
+          </>
+        )}
       </View>
       <View style={styles.bottomMenu}>
         <Menu />
@@ -83,6 +89,12 @@ const styles = StyleSheet.create({
     // bottom: 50,
     justifyContent: "center",
     alignItems: "center",
+  },
+  noPostText: {
+    fontSize: 20,
+    color: "gray",
+    textAlign: "center",
+    justifyContent: "center",
   },
   lengthText: {
     top: 15,

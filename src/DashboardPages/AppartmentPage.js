@@ -22,18 +22,18 @@ const AppartmentPage = ({ route }) => {
   const [userIdArray] = useContext(AuthContext);
   const userId = userIdArray?.data?.user?._id;
   const [searchText, setSearchText] = useState("");
+  const [sortOption, setSortOption] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCarPosts = async () => {
       setIsLoading(true);
-      // Replace the following line with your actual data fetching logic
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setIsLoading(false);
     };
 
     fetchCarPosts();
-  }, [searchText]); // Add searchText as a dependency
+  }, [searchText]);
 
   return (
     <View style={styles.container}>
@@ -58,6 +58,7 @@ const AppartmentPage = ({ route }) => {
                   posts={apartmentPosts}
                   userId={userId}
                   searchText={searchText}
+                  sortOption={sortOption} // Pass sortOption as a prop
                 />
               </ScrollView>
             )}
@@ -72,6 +73,7 @@ const AppartmentPage = ({ route }) => {
           setSearchText={(value) => setSearchText(value)}
           imageSource={applogo}
           placeholder="SEARCH YOUR APARTMENT"
+          setSortOption={setSortOption}
         />
       </View>
     </View>

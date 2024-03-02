@@ -20,6 +20,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { API } from "../../api/config";
 import Rating from "../Rating";
+import { FontAwesome } from "@expo/vector-icons";
 
 const PostDetailScreen = ({ route }) => {
   const { post, myPostScreen, userId } = route.params;
@@ -102,7 +103,7 @@ const PostDetailScreen = ({ route }) => {
         alert("Comment cannot be empty");
         return;
       }
-      // console.log("postid ", post?._id);
+
       const response = await API.put(
         `/post/comments/${post?._id}`,
         {
@@ -254,6 +255,10 @@ const PostDetailScreen = ({ route }) => {
               )}
               <View style={styles.ratingContainer}>
                 <Rating rating={rating} onRatingChange={handleRatingChange} />
+                <Text style={styles.ratingText}>
+                  {post.rating}
+                  <FontAwesome name="star" size={23} color="#FFD700" />
+                </Text>
               </View>
               <View style={styles.commentContainer}>
                 <View style={styles.commentInputContainer}>
@@ -405,6 +410,7 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     top: 20,
+    width: 345,
     textAlign: "left", // Align text to the left
     marginLeft: 10, // Add a left margin for consistent gap
   },
@@ -435,8 +441,17 @@ const styles = StyleSheet.create({
   //   borderRadius: 25,
   // },
   ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
     top: 10,
     left: 5,
+  },
+  ratingText: {
+    top: 10,
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 100,
   },
   commentContainer: {
     top: 10,

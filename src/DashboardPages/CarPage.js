@@ -19,9 +19,9 @@ const CarPage = ({ route }) => {
   const [userIdArray] = useContext(AuthContext);
   const userId = userIdArray?.data?.user?._id;
   const [searchText, setSearchText] = useState("");
-  const [sortOption, setSortOption] = useState(null); // Add sort option state
+  const [sortOption, setSortOption] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  console.log("options", sortOption);
+  // console.log("options", sortOption);
   useEffect(() => {
     const fetchCarPosts = async () => {
       setIsLoading(true);

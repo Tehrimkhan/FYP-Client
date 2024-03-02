@@ -55,7 +55,7 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText, sortOption }) => {
       return searchedAndSortedPosts.sort((a, b) => a.rent - b.rent);
     }
     if (sortOption === "rating") {
-      return searchedAndSortedPosts.sort((a, b) => b.rating - a.rating);
+      return searchedAndSortedPosts.sort((a, b) => a.rating - b.rating);
     }
   };
 
