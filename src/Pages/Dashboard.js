@@ -115,7 +115,7 @@ const Dashboard = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -147,9 +147,9 @@ const styles = StyleSheet.create({
     bottom: 20,
   },
   sliderContainer: {
-    marginTop: 130,
+    marginTop: 80,
     //Added
-    marginBottom: 25,
+    marginBottom: 10,
   },
   buttonContainer: {
     marginTop: 20,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   appbuttonStyle: {
     backgroundColor: "#FED9EB",
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   apartbuttonStyle: {
     backgroundColor: "#B3DFAC",
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   furnbuttonStyle: {
     backgroundColor: "#FFE2AA",
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     width: 340,
     height: 81,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   buttonText: {
     fontSize: 14,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   },
   bottomMenu: {
     position: "absolute",
-    bottom: -40,
+    bottom: 20,
     left: 0,
     right: 0,
     borderTopWidth: 2,

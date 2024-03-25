@@ -35,7 +35,7 @@ const PostDetailScreen = ({ route }) => {
     navigation.navigate("Dashboard");
   };
   const handleSubmit = () => {
-    navigation.navigate("PaymentPage");
+    navigation.navigate("ChatPage");
   };
   useEffect(() => {
     if (post?.status === "rejected") {

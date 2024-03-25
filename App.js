@@ -28,6 +28,8 @@ import MyPage from "./src/NavbarPages/MyPage";
 
 import PostDetailScreen from "./src/Component/DetailScreen/PostDetailScreen";
 import PaymentPage from "./src/Payment/PaymentPage";
+import ChatMessagePage from "./src/Component/ChatMessagePage";
+import SearchUsersPage from "./src/Component/SearchUsersPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,7 +46,7 @@ export default function App() {
       <AuthProvider>
         <PostProvider>
           <Stack.Navigator
-            initialRouteName="MainPage"
+            initialRouteName="LoginPage"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="MyPage" component={MyPage} />
@@ -61,7 +63,6 @@ export default function App() {
             <Stack.Screen name="SellerPage" component={SellerPage} />
             <Stack.Screen name="MyAdsPage" component={MyAdsPage} />
             <Stack.Screen name="YouPage" component={YouPage} />
-
             <Stack.Screen name="ApparelAdPage" component={ApparelAdPage} />
             <Stack.Screen
               name="appartmentAdPage"
@@ -69,13 +70,13 @@ export default function App() {
             />
             <Stack.Screen name="CarAdPage" component={CarAdPage} />
             <Stack.Screen name="FurnitureAdPage" component={FurnitureAdPage} />
-
             <Stack.Screen
               name="PostDetailScreen"
               component={PostDetailScreen}
             />
-
             <Stack.Screen name="PaymentPage" component={PaymentPage} />
+            <Stack.Screen name="ChatMessagePage" component={ChatMessagePage} />
+            <Stack.Screen name="SearchUsersPage" component={SearchUsersPage} />
           </Stack.Navigator>
         </PostProvider>
       </AuthProvider>

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AuthContext = createContext();
@@ -9,16 +9,6 @@ const AuthProvider = ({ children }) => {
   const [userId, setUserId] = useState({
     userId: null,
   });
-  // const [userName, setUserName] = useState({
-  //   name: null,
-  // });
-  // const [userEmail, setUserEmail] = useState({
-  //   email: null,
-  // });
-  // const [userImage, setUserImage] = useState({
-  //   profileImage: null,
-  // });
-
   // INITIAL LOCAL STORAGE DATA
   useEffect(() => {
     const getLocalStorageData = async () => {
@@ -26,13 +16,6 @@ const AuthProvider = ({ children }) => {
         let data = await AsyncStorage.getItem("@auth");
         let loginData = JSON.parse(data);
         setUserId(loginData?.data?.user?._id || null);
-        // setUserName(loginData?.data?.user?.name || null);
-        // setUserEmail(loginData?.data?.user?.email || null);
-        // setUserImage(loginData?.data?.user?.profileImage[0]?.url || null);
-        // console.log("User ID:", loginData?.data?.user?._id);
-        // console.log("User name:", loginData?.data?.user?.name);
-        // console.log("User email:", loginData?.data?.user?.email);
-        // console.log("User Image:", loginData?.data?.user?.profileImage[0]?.url);
       } catch (error) {
         console.error("Error retrieving data from AsyncStorage:", error);
       }
@@ -42,18 +25,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={[
-        userId,
-        setUserId,
-        // userName,
-        // setUserName,
-        // userImage,
-        // setUserImage,
-        // userEmail,
-        // setUserEmail,
-      ]}
-    >
+    <AuthContext.Provider value={[userId, setUserId]}>
       {children}
     </AuthContext.Provider>
   );
