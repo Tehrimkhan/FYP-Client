@@ -18,6 +18,9 @@ import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../context/authContext";
 import { API } from "../api/config";
+import io from "socket.io-client";
+
+const socket = io("http://192.168.0.107:8080");
 
 const ChatMessagePage = ({ route }) => {
   const navigation = useNavigation();
@@ -25,7 +28,6 @@ const ChatMessagePage = ({ route }) => {
   const { recieverName, profileImage, receiverId } = route.params;
   const [userIdArray] = useContext(AuthContext);
   const userId = userIdArray?.data?.user?._id;
-  // console.log("LoggedIn", userId);
   const [newMessage, setNewMessage] = useState("");
   const scrollViewRef = useRef();
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
@@ -116,6 +118,15 @@ const ChatMessagePage = ({ route }) => {
       setSenderId(senderId);
       setNewMessage("");
       setMessages((prevMessages) => [...prevMessages, sentMessage]);
+
+      // Emit the message to the server
+      socket.emit("message", {
+        message: newMessage,
+        senderId: userId,
+        receiverId: receiverId,
+        createdAt: new Date(),
+      });
+
       // console.log("Sender ID:", senderId);
     } catch (error) {
       console.error("Error sending message:", error.message);
@@ -123,6 +134,22 @@ const ChatMessagePage = ({ route }) => {
       setSendingMessage(false);
     }
   };
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("client is connected to the server: ", socket.id);
+    });
+
+    // Listen for incoming messages
+    socket.on("message", (message) => {
+      console.log("Received message:", message);
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+
+    return () => {
+      socket.off("message"); // Clean up socket event listener on component unmount
+    };
+  }, []);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -163,6 +190,7 @@ const ChatMessagePage = ({ route }) => {
   const handleKeyboardShow = () => {
     setShowEmojiSelector(false);
   };
+
   const navigateToChatPage = () => {
     navigation.navigate("ChatPage");
   };
