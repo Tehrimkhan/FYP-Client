@@ -26,16 +26,28 @@ const PostDetailScreen = ({ route }) => {
   const { post, myPostScreen, userId } = route.params;
   const token = API.defaults.headers.common["Authorization"];
   const [rating, setRating] = useState(0);
-  // console.log(token);
-  // console.log(userId);
-  // console.log("userID from postDetail", userId);
+  const [loadingComments, setLoadingComments] = useState(true); // Add loading state for comments
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
+
   const navigation = useNavigation();
+
+  const profileImage = post?.postedBy?.profileImage?.[0]?.secure_url;
+  console.log("Profile Image:", profileImage);
 
   const handleBackButton = () => {
     navigation.navigate("Dashboard");
   };
   const handleSubmit = () => {
-    navigation.navigate("ChatPage");
+    if (post?.postedBy?._id && post?.postedBy?.name) {
+      navigation.navigate("ChatMessagePage", {
+        recieverName: post.postedBy.name,
+        profileImage: post.postedBy.profileImage[0].secure_url,
+        receiverId: post.postedBy._id,
+      });
+    } else {
+      console.error("Error: Insufficient postedBy information.");
+    }
   };
   useEffect(() => {
     if (post?.status === "rejected") {
@@ -46,23 +58,7 @@ const PostDetailScreen = ({ route }) => {
       return () => clearTimeout(deleteAlert);
     }
   }, [post?.status]);
-  //handle delete Prompt
-  //   const handlePrompt = (id) => {
-  //     Alert.alert("ALERT!", "DO YOU REALLY WANT TO DELETE THIS POST?", [
-  //       {
-  //         text: "Cancel",
-  //         onPress: () => {
-  //           console.log("CANCEL PRESS");
-  //         },
-  //       },
-  //       {
-  //         text: "DELETE",
-  //         onPress: () => handleDeletePost(id),
 
-  //       },
-  //     ]);
-  //   };
-  //delete post
   const handleDeletePost = async (id) => {
     try {
       if (!token || token.trim() === "") {
@@ -87,13 +83,12 @@ const PostDetailScreen = ({ route }) => {
       alert("Error deleting post");
     }
   };
-  const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     if (post?.reviews && post.reviews.length > 0) {
       const extractedComments = post.reviews.map((review) => review.comment);
       setComments(extractedComments);
+      setLoadingComments(false); // Set loading to false once comments are loaded
     }
   }, [post]);
 
@@ -131,10 +126,8 @@ const PostDetailScreen = ({ route }) => {
   };
   const handleRatingChange = async (value) => {
     try {
-      // Update the rating state when it changes
       setRating(value);
 
-      // Submit the rating to the backend
       await submitRating(post?._id, value);
     } catch (error) {
       console.error(error);
@@ -142,7 +135,6 @@ const PostDetailScreen = ({ route }) => {
     }
   };
 
-  // Function to submit rating to backend
   const submitRating = async (postId, ratingValue) => {
     try {
       const response = await API.put(
@@ -166,6 +158,7 @@ const PostDetailScreen = ({ route }) => {
       alert("You've already rated this post!");
     }
   };
+
   return (
     <View>
       <Ionicons
@@ -233,11 +226,11 @@ const PostDetailScreen = ({ route }) => {
                     gap: 150,
                   }}
                 >
-                  <MaterialCommunityIcons
+                  {/* <MaterialCommunityIcons
                     name="pencil-plus"
                     size={24}
                     color="black"
-                  />
+                  /> */}
                   <TouchableOpacity onPress={() => handleDeletePost(post?._id)}>
                     <MaterialIcons name="delete" size={24} color="black" />
                   </TouchableOpacity>
@@ -279,13 +272,19 @@ const PostDetailScreen = ({ route }) => {
                 </View>
               </View>
               <View style={styles.scrollviewContainer}>
-                <ScrollView>
-                  {comments.map((item, index) => (
-                    <View key={index} style={styles.comment}>
-                      <Text>{item}</Text>
-                    </View>
-                  ))}
-                </ScrollView>
+                {loadingComments ? (
+                  <View style={styles.loadingContainer}>
+                    <Text>Loading comments...</Text>
+                  </View>
+                ) : (
+                  <ScrollView>
+                    {comments.map((item, index) => (
+                      <View key={index} style={styles.comment}>
+                        <Text>{item}</Text>
+                      </View>
+                    ))}
+                  </ScrollView>
+                )}
               </View>
               {!myPostScreen && userId !== post?.postedBy?._id && (
                 <TouchableOpacity
@@ -540,6 +539,11 @@ const styles = StyleSheet.create({
   },
   rejected: {
     backgroundColor: "rgba(255, 0, 0, 0.3)",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

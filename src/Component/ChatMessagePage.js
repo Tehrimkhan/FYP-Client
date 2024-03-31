@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  createContext,
+} from "react";
 import {
   StyleSheet,
   Text,
@@ -20,19 +26,29 @@ import { AuthContext } from "../context/authContext";
 import { API } from "../api/config";
 import io from "socket.io-client";
 
-const socket = io("http://192.168.0.107:8080");
+const SocketContext = createContext();
+export const useSocketContext = () => {
+  return useContext(SocketContext);
+};
 
 const ChatMessagePage = ({ route }) => {
+  const [userIdArray] = useContext(AuthContext);
+  const userId = userIdArray?.data?.user?._id;
+  const socket = io("http://192.168.0.107:8080", {
+    transports: ["websocket"],
+    query: {
+      userId: userId,
+    },
+  });
+
+  const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
   const token = API.defaults.headers.common["Authorization"];
   const { recieverName, profileImage, receiverId } = route.params;
-  const [userIdArray] = useContext(AuthContext);
-  const userId = userIdArray?.data?.user?._id;
   const [newMessage, setNewMessage] = useState("");
   const scrollViewRef = useRef();
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState(null);
-  const [messages, setMessages] = useState([]);
   const [senderId, setSenderId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -48,7 +64,7 @@ const ChatMessagePage = ({ route }) => {
       );
     }
 
-    if (messages.length === 0) {
+    if (!messages || messages.length === 0) {
       return (
         <View style={styles.noMessagesContainer}>
           <Text style={styles.noMessagesText}>
@@ -57,11 +73,18 @@ const ChatMessagePage = ({ route }) => {
         </View>
       );
     }
-
     return messages.map((msg, index) => {
+      if (!msg || typeof msg !== "object") {
+        return null;
+      }
+
       const isCurrentUser = msg.senderId === userId;
 
-      const messageContainerWidth = Dimensions.get("window").width * 0.7;
+      // Calculate message container width dynamically based on message length
+      const messageContainerWidth = Math.min(
+        Math.max(Dimensions.get("window").width * 0.2, msg.message.length * 10),
+        Dimensions.get("window").width * 0.9 // Adjust maximum width as needed
+      );
 
       return (
         <View
@@ -69,7 +92,7 @@ const ChatMessagePage = ({ route }) => {
           style={[
             styles.messageContainer,
             isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage,
-            { width: messageContainerWidth },
+            { minWidth: 180, maxWidth: messageContainerWidth }, // Set minWidth here
           ]}
         >
           <View
@@ -116,38 +139,33 @@ const ChatMessagePage = ({ route }) => {
       const sentMessage = response.data;
       const senderId = sentMessage.senderId;
       setSenderId(senderId);
-      setNewMessage("");
       setMessages((prevMessages) => [...prevMessages, sentMessage]);
 
-      // Emit the message to the server
       socket.emit("message", {
         message: newMessage,
         senderId: userId,
         receiverId: receiverId,
         createdAt: new Date(),
       });
-
-      // console.log("Sender ID:", senderId);
+      setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error.message);
     } finally {
       setSendingMessage(false);
     }
   };
+  socket.on("message", (message) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+    scrollToBottom();
+  });
 
   useEffect(() => {
-    socket.on("connect", () => {
+    socket.on("connection", () => {
       console.log("client is connected to the server: ", socket.id);
     });
 
-    // Listen for incoming messages
-    socket.on("message", (message) => {
-      console.log("Received message:", message);
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
-
     return () => {
-      socket.off("message"); // Clean up socket event listener on component unmount
+      socket.off("message");
     };
   }, []);
 
@@ -166,7 +184,6 @@ const ChatMessagePage = ({ route }) => {
 
         const data = response.data;
         setMessages(data);
-        // console.log("Messages", data);
       } catch (error) {
         console.error(error);
         alert("Error Getting Messages");
@@ -194,6 +211,7 @@ const ChatMessagePage = ({ route }) => {
   const navigateToChatPage = () => {
     navigation.navigate("ChatPage");
   };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -234,11 +252,18 @@ const ChatMessagePage = ({ route }) => {
           </TouchableOpacity>
           <TextInput
             style={styles.input}
-            value={newMessage + (selectedEmoji ? selectedEmoji : "")}
+            value={newMessage}
             onChangeText={setNewMessage}
             placeholder="Type your message..."
             placeholderTextColor="#aaa"
             multiline
+            maxLength={100}
+            onContentSizeChange={(e) => {
+              const { height } = e.nativeEvent.contentSize;
+              if (height > 120) {
+                scrollViewRef.current.scrollToEnd({ animated: true });
+              }
+            }}
             onFocus={handleKeyboardShow}
           />
           <View style={styles.sendButtonContainer}>
@@ -287,15 +312,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 10,
     maxWidth: "70%",
-    maxHeight: 120,
   },
   messageBubble: {
     padding: 10,
-    borderRadius: 30,
+    borderRadius: 10,
     elevation: 1,
     borderWidth: 1,
     borderColor: "#ccc",
-    maxHeight: 50,
   },
   messageText: {
     fontSize: 17,
@@ -304,7 +327,7 @@ const styles = StyleSheet.create({
   messageTime: {
     fontSize: 12,
     color: "#ccc",
-    marginTop: -5,
+    marginTop: 0,
     marginRight: 5,
     textAlign: "right",
   },

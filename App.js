@@ -30,7 +30,6 @@ import PostDetailScreen from "./src/Component/DetailScreen/PostDetailScreen";
 import PaymentPage from "./src/Payment/PaymentPage";
 import ChatMessagePage from "./src/Component/ChatMessagePage";
 import SearchUsersPage from "./src/Component/SearchUsersPage";
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {

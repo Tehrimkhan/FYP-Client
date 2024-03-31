@@ -1,32 +1,24 @@
-// import { createContext, useState } from "react";
-// import { AuthContext } from "./authContext";
+/*import { createContext, useState, useEffect } from "react";
+import io from "socket.io-client";
+export const SocketContext = createContext();
 
-// export const SocketContext = createContext();
+export const SocketContextProvider = ({ children }) => {
+  const [socket, setSocket] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
-// export const SocketContextProvider = ({ children }) => {
-//   const [socket, setSocket] = useState(null);
-//   const [onlineUsers, setOnlineUsers] = useState([]);
-//   const { authUser } = AuthContext();
+  useEffect(() => {
+    const socket = io("http://192.168.0.107:8080");
+    socket.on("error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+    setSocket(socket);
 
-//   useEffect(() => {
-//     if (authUser) {
-//       const socket = io("http://192.168.0.107:8080");
-//       socket.on("error", (error) => {
-//         console.error("Socket connection error:", error);
-//       });
-//       setSocket(socket);
-
-//       return () => socket.close();
-//     } else {
-//       if (socket) {
-//         socket.close();
-//         setSocket(null);
-//       }
-//     }
-//   }, [authUser]);
-//   return (
-//     <SocketContextProvider value={{ socket, onlineUsers }}>
-//       {children}
-//     </SocketContextProvider>
-//   );
-// };
+    return () => socket.close();
+ }, []);
+  return (
+    <SocketContext.Provider value={{ socket, onlineUsers }}>
+      {children}
+    </SocketContext.Provider>
+  );
+};
+*/

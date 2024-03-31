@@ -126,7 +126,7 @@ const SearchUsersPage = ({ allUsers, onSearch }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F2F2F2",
     justifyContent: "space-between",
   },
   searchContainer: {
