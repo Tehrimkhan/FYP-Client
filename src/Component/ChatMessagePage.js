@@ -34,7 +34,7 @@ export const useSocketContext = () => {
 const ChatMessagePage = ({ route }) => {
   const [userIdArray] = useContext(AuthContext);
   const userId = userIdArray?.data?.user?._id;
-  const socket = io("http://192.168.0.107:8080", {
+  const socket = io("http://127.0.0.1:8080", {
     transports: ["websocket"],
     query: {
       userId: userId,
