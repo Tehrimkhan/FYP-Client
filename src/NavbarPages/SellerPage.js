@@ -44,7 +44,7 @@ const SellerPage = ({ navigation }) => {
           placeholder="ADD YOUR APPARTMENT"
         />
         <SellerButtons
-          onPress={() => navigateToScreen("furnitureAdPage")}
+          onPress={() => navigateToScreen("FurnitureAdPage")}
           imageSource={furnlogo}
           placeholder="ADD YOUR FURNITURE"
         />

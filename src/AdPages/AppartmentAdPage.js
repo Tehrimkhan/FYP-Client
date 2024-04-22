@@ -191,7 +191,7 @@ const AppartmentAdPage = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 30,
+    padding: 20,
     paddingBottom: 80,
   },
   innerContainer: {
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   backgroundContainer: {
     flex: 1,
     position: "absolute",
-    top: 20, // Adjusted top position
+    top: 0, // Adjusted top position
     left: 0,
     right: 0,
     bottom: 0,
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     position: "absolute",
-    bottom: -125,
+    bottom: -80,
     left: 0,
     right: 0,
     borderTopWidth: 2,

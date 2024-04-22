@@ -192,100 +192,119 @@ const PostDetailScreen = ({ route }) => {
             </View>
 
             <View style={styles.innerMainContainer}>
-              <View style={styles.upperheaderContainer}>
-                <Text style={styles.upperTextContainer}>{post.name}</Text>
-                <Text style={styles.upperTextContainer}>
-                  {post.room ? ` Room: ${post.room}` : ` Model: ${post.model}`}
-                </Text>
-                <Text style={styles.titlerentHeading}>
-                  {" "}
-                  | Rent: {post?.rent}
-                </Text>
-              </View>
-              <View style={styles.lowerHeaderContainer}>
-                <Text style={styles.lowertitleHeading}>
-                  {post.room ? `Area: ${post.area}` : `Make: ${post.make}`}
-                </Text>
-                <Text style={[styles.lowertitleHeading, { marginLeft: 25 }]}>
-                  {post.room
-                    ? `Floor: ${post.floor} th`
-                    : `Variant: ${post.variant}`}
-                </Text>
-              </View>
-              <View style={styles.descriptionContainer}>
-                <Text style={styles.discTextContainer}>Description:</Text>
-                <Text>{post?.description}</Text>
-              </View>
-              {myPostScreen && (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    top: 40,
-                    gap: 150,
-                  }}
-                >
-                  {/* <MaterialCommunityIcons
+              <ScrollView>
+                <View style={styles.upperheaderContainer}>
+                  <Text style={styles.upperTextContainer}>{post.name}</Text>
+                  <Text style={styles.upperTextContainer}>
+                    {post.room
+                      ? ` Room: ${post.room}`
+                      : post.model
+                      ? ` Model: ${post.model}`
+                      : ` Color: ${post.color}`}
+                  </Text>
+                  <Text style={styles.titlerentHeading}>
+                    {" "}
+                    | Rent: {post?.rent}
+                  </Text>
+                </View>
+                <View style={styles.lowerHeaderContainer}>
+                  <Text style={styles.lowertitleHeading}>
+                    {post.room
+                      ? `Area: ${post.area}`
+                      : post.make
+                      ? `Make: ${post.make}`
+                      : post.material
+                      ? `Material: ${post.material}`
+                      : `Fabric: ${post.fabric}`}
+                  </Text>
+                  <Text style={[styles.lowertitleHeading, { marginLeft: 15 }]}>
+                    {post.room
+                      ? ` Floor: ${post.floor} th`
+                      : post.variant
+                      ? ` Variant: ${post.variant}`
+                      : post.style
+                      ? ` Style: ${post.style}`
+                      : ` Size: ${post.size}`}
+                    {post.gender ? `  Category: ${post.gender}'s` : ""}
+                  </Text>
+                </View>
+                <View style={styles.descriptionContainer}>
+                  <Text style={styles.discTextContainer}>Description:</Text>
+                  <Text>{post?.description}</Text>
+                </View>
+                {myPostScreen && (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      top: 40,
+                      gap: 150,
+                    }}
+                  >
+                    {/* <MaterialCommunityIcons
                     name="pencil-plus"
                     size={24}
                     color="black"
                   /> */}
-                  <TouchableOpacity onPress={() => handleDeletePost(post?._id)}>
-                    <MaterialIcons name="delete" size={24} color="black" />
-                  </TouchableOpacity>
-                </View>
-              )}
-              {post?.postedBy?.name && (
-                <Text
-                  style={[
-                    styles.upperTextContainer,
-                    { marginLeft: 10, top: 30 },
-                  ]}
-                >
-                  Seller Name: {post?.postedBy?.name}
-                </Text>
-              )}
-              <View style={styles.ratingContainer}>
-                <Rating rating={rating} onRatingChange={handleRatingChange} />
-                <Text style={styles.ratingText}>
-                  {post.rating}
-                  <FontAwesome name="star" size={23} color="#FFD700" />
-                </Text>
-              </View>
-              <View style={styles.commentContainer}>
-                <View style={styles.commentInputContainer}>
-                  <TextInput
-                    multiline
-                    placeholder="Add a comment..."
-                    style={styles.commentInput}
-                    value={comment}
-                    onChangeText={(text) => setComment(text)}
-                  />
-                  <EvilIcons
-                    name="arrow-right"
-                    size={25}
-                    color="black"
-                    style={styles.arrowIcon}
-                    onPress={handleAddComment}
-                  />
-                </View>
-              </View>
-              <View style={styles.scrollviewContainer}>
-                {loadingComments ? (
-                  <View style={styles.loadingContainer}>
-                    <Text>Loading comments...</Text>
+                    <TouchableOpacity
+                      onPress={() => handleDeletePost(post?._id)}
+                    >
+                      <MaterialIcons name="delete" size={24} color="black" />
+                    </TouchableOpacity>
                   </View>
-                ) : (
-                  <ScrollView>
-                    {comments.map((item, index) => (
-                      <View key={index} style={styles.comment}>
-                        <Text>{item}</Text>
-                      </View>
-                    ))}
-                  </ScrollView>
                 )}
-              </View>
+                {post?.postedBy?.name && (
+                  <Text
+                    style={[
+                      styles.upperTextContainer,
+                      { marginLeft: 10, top: 30 },
+                    ]}
+                  >
+                    Seller Name: {post?.postedBy?.name}
+                  </Text>
+                )}
+                <View style={styles.ratingContainer}>
+                  <Rating rating={rating} onRatingChange={handleRatingChange} />
+                  <Text style={styles.ratingText}>
+                    {post.rating}
+                    <FontAwesome name="star" size={23} color="#FFD700" />
+                  </Text>
+                </View>
+                <View style={styles.commentContainer}>
+                  <View style={styles.commentInputContainer}>
+                    <TextInput
+                      multiline
+                      placeholder="Add a comment..."
+                      style={styles.commentInput}
+                      value={comment}
+                      onChangeText={(text) => setComment(text)}
+                    />
+                    <EvilIcons
+                      name="arrow-right"
+                      size={25}
+                      color="black"
+                      style={styles.arrowIcon}
+                      onPress={handleAddComment}
+                    />
+                  </View>
+                </View>
+                <View style={styles.scrollviewContainer}>
+                  {loadingComments ? (
+                    <View style={styles.loadingContainer}>
+                      <Text>No Comments</Text>
+                    </View>
+                  ) : (
+                    <ScrollView>
+                      {comments.map((item, index) => (
+                        <View key={index} style={styles.comment}>
+                          <Text>{item}</Text>
+                        </View>
+                      ))}
+                    </ScrollView>
+                  )}
+                </View>
+              </ScrollView>
               {!myPostScreen && userId !== post?.postedBy?._id && (
                 <TouchableOpacity
                   style={styles.subscribeButton}
@@ -450,7 +469,7 @@ const styles = StyleSheet.create({
     top: 10,
     fontSize: 20,
     fontWeight: "bold",
-    marginLeft: 100,
+    marginLeft: 80,
   },
   commentContainer: {
     top: 10,
@@ -489,7 +508,7 @@ const styles = StyleSheet.create({
     gap: 5,
     alignItems: "center",
     justifyContent: "center", // Center the content horizontally
-    top: 20,
+    top: 45,
     width: 360,
     height: 35,
     backgroundColor: "#F41111",

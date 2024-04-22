@@ -11,12 +11,13 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "./context/authContext";
 import Checkbox from "expo-checkbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons"; // Import Ionicons from react-native-vector-icons
 
 import { API } from "./api/config";
 import axios from "axios";
 
 const logo = require("../assets/logoW.png");
-const headlogo = require("../assets/download.png");
+const headlogo = require("../assets/SHAPE.png");
 const midImage = require("../assets/innerImage.png");
 
 const LoginPage = ({ navigation }) => {
@@ -25,15 +26,19 @@ const LoginPage = ({ navigation }) => {
   //STATE
   const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [agree, setAgree] = useState(false);
   const [userId, setUserId] = useState(null);
-  // console.log("loginapasd", userId);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const submit = async () => {
     try {
       if (!email || !password) {
         Alert.alert("Please Fill All Fields!");
       } else {
-        // console.log("DATA=>>", email, password);
         const data = await API.post(
           "login",
           {
@@ -49,17 +54,12 @@ const LoginPage = ({ navigation }) => {
           "Authorization"
         ] = `Bearer ${data.data.token}`;
 
-        // console.log("Check ==== > ", data);
-
         if (data && data.data) {
           setState(data);
           await AsyncStorage.setItem("@auth", JSON.stringify(data));
           Alert.alert("You are Signed In!");
 
-          // UPDATE userId STATE HERE
           setUserId(data.data.user._id);
-          // console.log(data.data.user._id);
-          // Pass userId as a prop to the Dashboard screen
           navigation.navigate("Dashboard", { userId: userId });
         } else {
           alert("Data is undefined");
@@ -70,15 +70,16 @@ const LoginPage = ({ navigation }) => {
       console.log(error);
     }
   };
+
   const signin = () => {
     navigation.navigate("SignUp");
   };
-  //Temp funct to check local storage
+
   const getLocalStorageData = async () => {
     let data = await AsyncStorage.getItem("@auth");
-    // console.log("LocalStorage => ", data);
   };
   getLocalStorageData();
+
   return (
     <View style={styles.bgContainer}>
       <View style={styles.imageContainer}>
@@ -103,6 +104,14 @@ const LoginPage = ({ navigation }) => {
             value={email}
             onChangeText={(actualData) => setemail(actualData)}
           />
+          <View style={styles.inputIcon}>
+            <Ionicons
+              name="mail"
+              size={24}
+              color="white"
+              style={styles.mailIcon}
+            />
+          </View>
         </View>
 
         <View style={styles.inputContainer}>
@@ -112,10 +121,20 @@ const LoginPage = ({ navigation }) => {
             placeholderTextColor="white"
             autoCapitalize="none"
             autoCorrect={false}
-            secureTextEntry={true}
+            secureTextEntry={!showPassword} // Toggle password visibility
             value={password}
             onChangeText={(actualData) => setPassword(actualData)}
           />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={togglePasswordVisibility} // Toggle password visibility
+          >
+            <Ionicons
+              name={showPassword ? "eye-off" : "eye"}
+              size={24}
+              color="white"
+            />
+          </TouchableOpacity>
         </View>
 
         <View style={styles.wrapper}>
@@ -134,7 +153,7 @@ const LoginPage = ({ navigation }) => {
         <TouchableOpacity
           style={[
             styles.buttonStyle,
-            { backgroundColor: agree ? "#32A1A8" : "grey" },
+            { backgroundColor: agree ? "#9c80e7" : "grey" },
           ]}
           disabled={!agree}
           onPress={() => submit()}
@@ -155,7 +174,7 @@ const LoginPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   bgContainer: {
     flex: 1,
-    backgroundColor: "#F2F2F2",
+    backgroundColor: "#17171f",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -184,13 +203,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   header: {
-    color: "rgba(0, 0, 0, 0.81)",
+    color: "white",
     fontSize: 24,
     fontStyle: "normal",
     fontWeight: "700",
   },
   lowerheader: {
-    color: "rgba(0, 0, 0, 0.58)",
+    color: "white",
     fontSize: 14,
     marginBottom: 30,
     fontWeight: "bold",
@@ -225,24 +244,44 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end", // This will move the container to the right
+    position: "relative", // Required for absolute positioning of children
     marginBottom: 10,
   },
   inputStyle: {
-    borderColor: "rgba(160, 97, 106, 0.47)",
-    backgroundColor: "rgba(160, 97, 106, 0.47)",
+    borderColor: "#524678",
+    backgroundColor: "#524678",
     paddingHorizontal: 30,
     paddingVertical: 5,
     borderRadius: 100,
     width: 340,
-    height: 61,
+    height: 60,
     fontSize: 16,
+    color: "white",
+  },
+
+  eyeIcon: {
+    position: "absolute", // Position the icon absolutely within the container
+    right: 20, // Adjust the right position as necessary
+    top: 20,
+  },
+
+  mailIcon: {
+    position: "absolute", // Position the icon absolutely within the container
+    right: 20, // Adjust the right position as necessary
+    top: -15,
   },
   buttonStyle: {
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 20,
     backgroundColor: "#009688",
     borderRadius: 10,
     paddingVertical: 15,
-    paddingHorizontal: 20,
+    width: 335,
+    marginLeft: 15,
   },
   buttonText: {
     fontSize: 18,
@@ -260,12 +299,12 @@ const styles = StyleSheet.create({
   wrapperText: {
     marginLeft: 10,
     fontSize: 14,
-    color: "black",
+    color: "white",
     fontWeight: "bold",
   },
   signupText: {
     fontWeight: "bold",
-    color: "#32A1A8",
+    color: "#9c80e7",
     fontSize: 16,
     alignItems: "center",
     marginTop: 10,
@@ -282,6 +321,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     fontWeight: "bold",
+    color: "white",
   },
 });
 

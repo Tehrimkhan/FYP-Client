@@ -15,15 +15,23 @@ const Dashboard = ({ navigation }) => {
   const [posts] = useContext(PostContext);
 
   const filteredCarPosts = posts.filter((post) => post.title === "Car");
+
   const filteredAppartmentPosts = posts.filter(
     (post) => post.title === "Apartment"
+  );
+  const filteredApparelPosts = posts.filter((post) => post.title === "Apparel");
+
+  const filteredFurniturePosts = posts.filter(
+    (post) => post.title === "Furniture"
   );
 
   const submitCar = () => {
     navigation.navigate("CarPage", { carPosts: filteredCarPosts });
   };
   const submitApparels = () => {
-    navigation.navigate("ApparelsPage");
+    navigation.navigate("ApparelsPage", {
+      apparelPosts: filteredApparelPosts,
+    });
   };
   const submitAppartment = () => {
     navigation.navigate("AppartmentPage", {
@@ -31,7 +39,9 @@ const Dashboard = ({ navigation }) => {
     });
   };
   const submitFurniture = () => {
-    navigation.navigate("FurniturePage");
+    navigation.navigate("FurniturePage", {
+      furniturePosts: filteredFurniturePosts,
+    });
   };
   return (
     <View style={styles.container}>

@@ -66,7 +66,7 @@ const SearchBar = ({
                 />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleFilter}>
+            {/* <TouchableOpacity onPress={handleFilter}>
               <View style={styles.iconContainer}>
                 <Ionicons
                   name="filter"
@@ -75,7 +75,7 @@ const SearchBar = ({
                   style={styles.icon}
                 />
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "row",
     marginLeft: 5,
-    marginRight: 10,
+    marginRight: 20,
     alignItems: "center",
   },
   icon: {

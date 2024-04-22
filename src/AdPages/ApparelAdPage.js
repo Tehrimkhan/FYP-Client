@@ -1,32 +1,34 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   Alert,
   Image,
   ActivityIndicator,
+  ScrollView,
+  Keyboard,
+  Platform,
 } from "react-native";
 import Background from "../Component/Background";
 import SelectImage from "../Component/SelectImage";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AuthContext } from "../context/authContext";
 import { API } from "../api/config";
-import { loadStripe } from "@stripe/stripe-js";
 import Menu from "../Component/Menu";
 import { useImageUpload } from "../utils/helpers";
 
 const ApparelAdPage = ({ navigation }) => {
   const [postImages, setpostImages] = useState("");
   const [progress, setProgress] = useState(0);
-  const [title, setTitle] = useState("Car");
-  const [make, setMake] = useState("");
+  const [title, setTitle] = useState("Apparel");
   const [name, setName] = useState("");
-  const [model, setModel] = useState("");
-  const [variant, setVariant] = useState("");
+  const [color, setColor] = useState("");
+  const [fabric, setFabric] = useState("");
+  const [size, setSize] = useState("");
+  const [gender, setGender] = useState("");
   const [rent, setRent] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +40,21 @@ const ApparelAdPage = ({ navigation }) => {
   const handleImageSelect = (uri) => {
     setpostImages(uri);
   };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  const scrollViewRef = useRef();
 
   const handleSubmit = async () => {
     if (!postImages) {
@@ -57,7 +74,15 @@ const ApparelAdPage = ({ navigation }) => {
       const imageResponse = await uploadImage(_file, setProgress);
       console.log("Cloudinary response sent to the backend", imageResponse);
 
-      if (!make || !name || !model || !variant || !rent || !description) {
+      if (
+        !name ||
+        !color ||
+        !fabric ||
+        !size ||
+        !rent ||
+        !description ||
+        !gender
+      ) {
         Alert.alert("Please Fill All Post Fields!");
       } else {
         const createPostResponse = await API.post(
@@ -66,9 +91,10 @@ const ApparelAdPage = ({ navigation }) => {
             postImages: imageResponse,
             title,
             name,
-            model,
-            make,
-            variant,
+            color,
+            fabric,
+            size,
+            gender,
             rent,
             description,
           },
@@ -92,70 +118,85 @@ const ApparelAdPage = ({ navigation }) => {
       setIsLoading(false);
     }
   };
+
   return (
     <View>
-      <Background />
-      <ScrollView style={styles.container}>
-        <View style={styles.Selectioncontainer}>
-          <SelectImage onSelectImage={handleImageSelect} />
+      <View style={styles.backgroundContainer}>
+        <Background />
+      </View>
+      <ScrollView
+        ref={scrollViewRef}
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.innerContainer}>
+          <View style={styles.Selectioncontainer}>
+            {!postImages && <SelectImage onSelectImage={handleImageSelect} />}
+          </View>
+          {postImages ? (
+            <Image source={{ uri: postImages }} style={styles.image} />
+          ) : null}
+
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setName(text)}
+            value={name}
+            placeholder="Enter Name"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setColor(text)}
+            value={color}
+            placeholder="Enter Color"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setFabric(text)}
+            value={fabric}
+            placeholder="Enter Fabric"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setSize(text)}
+            value={size}
+            placeholder="Enter Size"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setGender(text)}
+            value={gender}
+            placeholder="Enter Category"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setRent(text)}
+            value={rent}
+            placeholder="Enter Rent"
+          />
+          <TextInput
+            style={styles.descinput}
+            onChangeText={(text) => setDescription(text)}
+            value={description}
+            placeholder="Enter Description.."
+            multiline={true}
+            numberOfLines={6}
+          />
+
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={() => handleSubmit(token)}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <>
+                <MaterialIcons name="add-box" size={24} color="white" />
+                <Text style={styles.buttonText}>CREATE POST</Text>
+              </>
+            )}
+          </TouchableOpacity>
         </View>
-        {postImages ? (
-          <Image source={{ uri: postImages }} style={styles.image} />
-        ) : null}
-
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setName(text)}
-          value={name}
-          placeholder="Enter Name"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setMake(text)}
-          value={make}
-          placeholder="Enter Make"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setModel(text)}
-          value={model}
-          placeholder="Enter Model"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setVariant(text)}
-          value={variant}
-          placeholder="Enter Variant"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setRent(text)}
-          value={rent}
-          placeholder="Enter Rent"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setDescription(text)}
-          value={description}
-          placeholder="Enter Description"
-          multiline={true}
-          numberOfLines={6}
-        />
-
-        <TouchableOpacity
-          style={styles.saveButton}
-          onPress={() => handleSubmit(token)}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator size="small" color="white" />
-          ) : (
-            <>
-              <MaterialIcons name="add-box" size={24} color="white" />
-              <Text style={styles.buttonText}>CREATE POST</Text>
-            </>
-          )}
-        </TouchableOpacity>
       </ScrollView>
       <View style={styles.menuContainer}>
         <Menu />
@@ -166,28 +207,32 @@ const ApparelAdPage = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    top: 100,
     padding: 20,
-    resizeMode: "cover",
+    paddingBottom: 80,
+  },
+  innerContainer: {
+    paddingTop: 150, // Adjusted paddingTop
   },
   Selectioncontainer: {
     flexDirection: "row",
     marginBottom: 10,
   },
-  uploadBtnContainer: {
-    height: 50,
-    width: 173,
-    justifyContent: "center",
-    alignItems: "center",
-    borderStyle: "dashed",
-    borderWidth: 1,
-    borderRadius: 5,
-    marginRight: 5,
+  backgroundContainer: {
+    flex: 1,
+    position: "absolute",
+    top: 0, // Adjusted top position
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "#f0f0f0",
   },
-  label: {
-    fontSize: 18,
-    marginBottom: 5,
-    fontFamily: "appfont",
+  image: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+    overflow: "hidden",
+    borderRadius: 15,
+    marginBottom: 10,
   },
   input: {
     height: 40,
@@ -196,14 +241,18 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingHorizontal: 10,
     borderRadius: 5,
+    fontFamily: "appfont",
+    color: "gray",
   },
-  image: {
-    width: 350,
-    height: 200,
-    resizeMode: "cover",
-    overflow: "hidden",
-    borderRadius: 25,
-    marginBottom: 10,
+  descinput: {
+    height: 60,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    fontFamily: "appfont",
+    color: "gray",
   },
   saveButton: {
     flexDirection: "row",
@@ -212,7 +261,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#32A1A8",
     borderRadius: 5,
     paddingVertical: 10,
-    paddingHorizontal: 20,
   },
   buttonText: {
     marginLeft: 5,
@@ -221,7 +269,13 @@ const styles = StyleSheet.create({
     color: "white",
   },
   menuContainer: {
-    bottom: -290,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderTopWidth: 2,
+    borderTopColor: "#DDDDDD",
+    height: 50,
   },
 });
 export default ApparelAdPage;

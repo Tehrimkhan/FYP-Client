@@ -7,23 +7,35 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Modal,
+  Pressable,
+  TextInput,
 } from "react-native";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
+
 const { width } = Dimensions.get("window");
 
-const AdsCards = ({ posts, myPostScreen, userId, searchText, sortOption }) => {
+const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
   const navigation = useNavigation();
-  const [searchPosts, setSearchedPosts] = useState([]);
-  console.log("adscard", sortOption);
+  const [sortedPosts, setSortedPosts] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [fromPrice, setFromPrice] = useState("");
+  const [toPrice, setToPrice] = useState("");
+  const [minRating, setMinRating] = useState(0);
+  const [showRangeFilter, setShowRangeFilter] = useState(false);
 
   const handlePostPress = (post, myPostScreen, userId) => {
     navigation.navigate("PostDetailScreen", { post, myPostScreen, userId });
   };
 
-  const SearchAndSortPosts = () => {
-    const SearchedPosts = posts.filter((post) => {
+  const filterAndSortPosts = () => {
+    if (!showRangeFilter) {
+      return posts;
+    }
+    const filteredPosts = posts.filter((post) => {
       const name = post?.name?.toLowerCase() || "";
       const make = post?.make?.toLowerCase() || "";
       const model = post?.model?.toLowerCase() || "";
@@ -32,108 +44,225 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText, sortOption }) => {
       const area = post?.area?.toLowerCase() || "";
       const room = post?.room?.toLowerCase() || "";
 
+      const color = post?.color?.toLowerCase() || "";
+      const fabric = post?.fabric?.toLowerCase() || "";
+      const size = post?.size?.toLowerCase() || "";
+      const gender = post?.gender?.toLowerCase() || "";
+
+      const material = post?.material?.toLowerCase() || "";
+      const style = post?.style?.toLowerCase() || "";
+
       return (
-        name.includes(searchText.toLowerCase()) ||
-        make.includes(searchText.toLowerCase()) ||
-        model.includes(searchText.toLowerCase()) ||
-        area.includes(searchText.toLowerCase()) ||
-        room.includes(searchText.toLowerCase()) ||
-        rent.includes(searchText.toLowerCase())
+        (name.includes(searchText.toLowerCase()) ||
+          make.includes(searchText.toLowerCase()) ||
+          model.includes(searchText.toLowerCase()) ||
+          area.includes(searchText.toLowerCase()) ||
+          room.includes(searchText.toLowerCase()) ||
+          color.includes(searchText.toLowerCase()) ||
+          fabric.includes(searchText.toLowerCase()) ||
+          size.includes(searchText.toLowerCase()) ||
+          gender.includes(searchText.toLowerCase()) ||
+          material.includes(searchText.toLowerCase()) ||
+          style.includes(searchText.toLowerCase()) ||
+          rent.includes(searchText.toLowerCase())) &&
+        post.rating &&
+        post.rating >= minRating
       );
     });
 
-    return searchPosts.length ? searchPosts : SearchedPosts;
+    const rangeFilteredPosts = filteredPosts.filter((post) => {
+      const postRent = parseInt(post?.rent);
+      const fromRent = parseInt(fromPrice);
+      const toRent = parseInt(toPrice);
+
+      if (!isNaN(fromRent) && !isNaN(toRent)) {
+        return postRent >= fromRent && postRent <= toRent;
+      } else if (!isNaN(fromRent)) {
+        return postRent >= fromRent;
+      } else if (!isNaN(toRent)) {
+        return postRent <= toRent;
+      }
+      return true;
+    });
+
+    return sortedPosts.length ? sortedPosts : rangeFilteredPosts;
   };
 
-  const searchedAndSortedPosts = SearchAndSortPosts();
+  const handleSortOption = (option) => {
+    let sortedPosts = [...filterAndSortPosts()];
 
-  const filteredPosts = () => {
-    if (sortOption === "highToLow") {
-      return searchedAndSortedPosts.sort((a, b) => b.rent - a.rent);
+    if (option === "lowToHigh") {
+      sortedPosts = sortedPosts.sort(
+        (a, b) => parseInt(a.rent) - parseInt(b.rent)
+      );
+    } else if (option === "highToLow") {
+      sortedPosts = sortedPosts.sort(
+        (a, b) => parseInt(b.rent) - parseInt(a.rent)
+      );
+    } else if (option === "alphabeticalOrder") {
+      sortedPosts = sortedPosts.sort((a, b) => a.name?.localeCompare(b.name));
     }
-    if (sortOption === "lowToHigh") {
-      return searchedAndSortedPosts.sort((a, b) => a.rent - b.rent);
-    }
-    if (sortOption === "rating") {
-      return searchedAndSortedPosts.sort((a, b) => a.rating - b.rating);
+
+    setSortedPosts(sortedPosts);
+    setModalVisible(false);
+  };
+  const toggleRangeFilter = () => {
+    if (showRangeFilter) {
+      setFromPrice("");
+      setToPrice("");
+      setShowRangeFilter(false);
+      setSortedPosts([]);
+    } else {
+      setShowRangeFilter(true);
     }
   };
-
-  const sortedPosts = filteredPosts();
 
   return (
-    <View style={styles.container}>
-      {searchedAndSortedPosts.length > 0 || sortedPosts.length > 0 ? (
-        (sortOption === "highToLow" ? sortedPosts : searchedAndSortedPosts).map(
-          (post, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handlePostPress(post, myPostScreen, userId)}
-            >
-              <View style={styles.innerContainer} key={index}>
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  pagingEnabled
-                >
-                  {post?.postImages.map((image, imageIndex) => (
-                    <Image
-                      key={imageIndex}
-                      source={{ uri: image.url }}
-                      style={styles.card}
-                      resizeMode="cover"
-                      onError={(e) =>
-                        console.log("Error loading image:", e.nativeEvent.error)
-                      }
+    <View>
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={toggleRangeFilter}
+          style={{
+            top: 10,
+            left: 300,
+            bottom: 10,
+          }}
+        >
+          <FontAwesome
+            name={showRangeFilter ? "chevron-up" : "chevron-down"}
+            size={24}
+            color="black"
+          />
+        </TouchableOpacity>
+
+        {/* Range filter */}
+        {showRangeFilter && (
+          <View style={styles.filterContainer}>
+            <View style={styles.rangeFilterContainer}>
+              <TextInput
+                style={[styles.inputStyle, { marginRight: 30 }]}
+                placeholder="From"
+                keyboardType="numeric"
+                value={fromPrice}
+                onChangeText={(value) => setFromPrice(value)}
+                placeholderTextColor="#888"
+              />
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="To"
+                keyboardType="numeric"
+                value={toPrice}
+                onChangeText={(value) => setToPrice(value)}
+                placeholderTextColor="#888"
+              />
+            </View>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+              <FontAwesome name="sliders" size={24} color="black" left={15} />
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Render posts */}
+        {filterAndSortPosts().map((post, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => handlePostPress(post, myPostScreen, userId)}
+          >
+            <View style={styles.innerContainer} key={index}>
+              {/* Post images */}
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                pagingEnabled
+              >
+                {post?.postImages.map((image, imageIndex) => (
+                  <Image
+                    key={imageIndex}
+                    source={{ uri: image.url }}
+                    style={styles.card}
+                    resizeMode="cover"
+                    onError={(e) =>
+                      console.log("Error loading image:", e.nativeEvent.error)
+                    }
+                  />
+                ))}
+              </ScrollView>
+
+              {/* Post details */}
+              <View style={styles.innerTextContainer}>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.titleHeading}>{post?.name}</Text>
+                  <Text style={styles.titleHeading}>
+                    {post.room
+                      ? `Room: ${post.room}`
+                      : post.model
+                      ? ` Model: ${post.model}`
+                      : ` Color: ${post.color}`}
+                  </Text>
+                  <Text style={styles.titlerentHeading}>
+                    | Rent: {post?.rent}
+                  </Text>
+                </View>
+                <View style={styles.postDetailsContainer}>
+                  <View style={styles.ratingContainer}>
+                    <Text style={styles.ratingText}>
+                      Rating: {post?.rating}
+                    </Text>
+                    <FontAwesome
+                      name="star"
+                      size={20}
+                      left={5}
+                      color="#FFD700"
                     />
-                  ))}
-                </ScrollView>
-                <View style={styles.innerTextContainer}>
-                  <View style={styles.titleContainer}>
-                    <Text style={styles.titleHeading}>{post?.name}</Text>
-                    <Text style={styles.titleHeading}>
-                      {post.room
-                        ? ` Room: ${post.room}`
-                        : ` Model: ${post.model}`}
-                    </Text>
-                    <Text style={styles.titlerentHeading}>
-                      | Rent: {post?.rent}
-                    </Text>
                   </View>
-                  <View style={styles.postDetailsContainer}>
-                    <View style={styles.ratingContainer}>
-                      <Text style={styles.ratingText}>
-                        Rating: {post?.rating}
-                      </Text>
-                      <FontAwesome
-                        name="star"
-                        size={20}
-                        left={5}
-                        color="#FFD700"
-                      />
-                    </View>
-                    <View>
-                      <Text style={styles.postDetailsText}>
-                        {moment(post?.createdAt).format("DD:MM:YYYY")}
-                      </Text>
-                    </View>
-                  </View>
+                  <Text style={styles.postDetailsText}>
+                    {moment(post?.createdAt).format("DD:MM:YYYY")}
+                  </Text>
                 </View>
               </View>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Modal for sort options */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(!modalVisible)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity onPress={() => handleSortOption("highToLow")}>
+              <Text style={styles.sortOption}>High to Low Rent</Text>
             </TouchableOpacity>
-          )
-        )
-      ) : (
-        <Text style={styles.nothingFoundText}>Nothing found</Text>
-      )}
+
+            <TouchableOpacity onPress={() => handleSortOption("lowToHigh")}>
+              <Text style={styles.sortOption}>Low to High Rent</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => handleSortOption("alphabeticalOrder")}
+            >
+              <Text style={styles.sortOption}>Alphabetical Order</Text>
+            </TouchableOpacity>
+
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-  },
+  container: {},
   innerContainer: {
     height: 294,
     width: 338,
@@ -159,7 +288,8 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   titleHeading: {
-    fontSize: 18,
+    marginTop: 10,
+    fontSize: 15,
     fontFamily: "appfont",
   },
   titleContainer: {
@@ -169,12 +299,11 @@ const styles = StyleSheet.create({
     left: 20,
   },
   titlerentHeading: {
+    marginTop: 10,
     fontSize: 15,
-    top: 4,
     fontWeight: "bold",
   },
   postDetailsContainer: {
-    // flex: 1,
     top: 15,
     flexDirection: "row",
   },
@@ -184,21 +313,75 @@ const styles = StyleSheet.create({
     bottom: 5,
   },
   ratingContainer: {
-    // right: 55,
+    flexDirection: "row",
     left: 20,
     bottom: 10,
+  },
+  rangeFilterContainer: {
     flexDirection: "row",
+    alignItems: "center", // Align items horizontally
+    marginBottom: 10,
+  },
+  inputStyle: {
+    width: 100, // Adjust the width as needed
+    height: 30,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginRight: 10, // Add margin between inputs
+  },
+  applyButtonContainer: {
+    marginLeft: 10, // Add margin between inputs and button
+  },
+  applyButton: {
+    paddingVertical: 5, // Reduce padding vertically
+    paddingHorizontal: 10, // Reduce padding horizontally
+    backgroundColor: "#007bff",
+    color: "#fff",
+    borderRadius: 5,
+    textAlign: "center",
+  },
+  filterContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  sortOption: {
+    fontSize: 18,
+    marginVertical: 10,
+    color: "black",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
   },
-  ratingText: {
-    fontSize: 18,
-    fontWeight: "bold",
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
-
-  nothingFoundText: {
-    textAlign: "center",
-    marginTop: 20,
+  closeButton: {
+    alignSelf: "flex-end",
+    marginBottom: 10,
+  },
+  closeButtonText: {
     fontSize: 16,
+    fontWeight: "bold",
+    color: "blue",
+  },
+  ratingText: {
+    fontSize: 17,
     fontWeight: "bold",
   },
 });

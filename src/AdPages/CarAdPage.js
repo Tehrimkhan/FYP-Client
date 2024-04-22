@@ -188,7 +188,7 @@ const CarAdPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     top: 150,
-    padding: 30,
+    padding: 20,
   },
   Selectioncontainer: {
     flexDirection: "row",
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   backgroundContainer: {
     flex: 1,
     position: "absolute",
-    top: 30,
+    top: 0,
     left: 0,
     right: 0,
     bottom: 0,
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     position: "absolute",
-    bottom: -320,
+    bottom: -290,
 
     left: 0,
     right: 0,

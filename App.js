@@ -45,7 +45,7 @@ export default function App() {
       <AuthProvider>
         <PostProvider>
           <Stack.Navigator
-            initialRouteName="LoginPage"
+            initialRouteName="MainPage"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="MyPage" component={MyPage} />

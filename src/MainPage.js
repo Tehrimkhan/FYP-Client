@@ -2,8 +2,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 
 const logo = require("../assets/logoW.png");
-const headlogo = require("../assets/download.png");
-const midImage = require("../assets/mainpageImage.png");
+const headlogo = require("../assets/SHAPE.png");
+const midImage = require("../assets/mainpageImage1.png");
 
 const MainPage = ({ navigation }) => {
   const submit = () => {
@@ -36,7 +36,7 @@ const MainPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   bgContainer: {
     flex: 1,
-    backgroundColor: "#F2F2F2",
+    backgroundColor: "#17171f",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -65,19 +65,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   header: {
-    color: "rgba(0, 0, 0, 0.81)",
+    color: "white",
     fontSize: 24,
     fontStyle: "normal",
     fontWeight: "700",
   },
   lowerheader: {
-    color: "rgba(0, 0, 0, 0.58)",
+    color: "white",
     fontSize: 14,
     marginBottom: 50,
     fontWeight: "bold",
   },
   lowertext: {
-    color: "black",
+    color: "white",
     fontSize: 14,
     marginBottom: 55,
     fontWeight: "bold",
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
-    backgroundColor: "#32A1A8",
+    backgroundColor: "#9c80e7",
     marginTop: 20,
     borderRadius: 10,
     paddingVertical: 15,

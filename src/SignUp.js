@@ -23,7 +23,7 @@ import axios from "axios";
 import { API } from "./api/config";
 
 const logo = require("../assets/logoW.png");
-const headlogo = require("../assets/download.png");
+const headlogo = require("../assets/SHAPE.png");
 
 const SignUp = ({ navigation }) => {
   const [email, setemail] = useState("");
@@ -162,7 +162,7 @@ const SignUp = ({ navigation }) => {
         <TouchableOpacity
           style={[
             styles.buttonStyle,
-            { backgroundColor: agree ? "#32A1A8" : "grey", marginTop: 20 },
+            { backgroundColor: agree ? "#9c80e7" : "grey", marginTop: 20 },
           ]}
           disabled={!agree}
           onPress={() => submit()}
@@ -198,7 +198,7 @@ const SignUp = ({ navigation }) => {
 const styles = StyleSheet.create({
   bgContainer: {
     flex: 1,
-    backgroundColor: "#F2F2F2",
+    backgroundColor: "#17171f",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -233,14 +233,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   header: {
-    color: "rgba(0, 0, 0, 0.81)",
+    color: "white",
     fontSize: 24,
     fontStyle: "normal",
     fontWeight: "700",
     marginLeft: 10,
   },
   lowerheader: {
-    color: "rgba(0, 0, 0, 0.58)",
+    color: "white",
     fontSize: 14,
     fontStyle: "normal",
     fontWeight: "700",
@@ -278,14 +278,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   inputStyle: {
-    borderColor: "rgba(160, 97, 106, 0.47)",
-    backgroundColor: "rgba(160, 97, 106, 0.47)",
+    borderColor: "#524678",
+    backgroundColor: "#524678",
     paddingHorizontal: 30,
     paddingVertical: 5,
     borderRadius: 100,
     width: 340,
     height: 61,
     fontSize: 16,
+    color: "white",
   },
   buttonStyle: {
     marginTop: 20,
@@ -310,12 +311,12 @@ const styles = StyleSheet.create({
   wrapperText: {
     marginLeft: 10,
     fontSize: 14,
-    color: "black",
+    color: "white",
     fontWeight: "bold",
   },
   signupText: {
     fontWeight: "bold",
-    color: "#32A1A8",
+    color: "white",
     fontSize: 16,
     alignItems: "center",
     marginTop: 1,
@@ -326,16 +327,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 10,
     alignItems: "center",
-    justifyContent: "center", // Center horizontally
+    justifyContent: "center",
   },
   lowerText: {
     marginTop: 10,
     fontSize: 16,
     fontWeight: "bold",
+    color: "white",
   },
   signupText: {
     fontWeight: "bold",
-    color: "#32A1A8",
+    color: "#9c80e7",
     fontSize: 16,
     alignItems: "center",
     marginTop: 10,
