@@ -59,7 +59,7 @@ const Banner = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: "#17171f",
     alignItems: "center",
     justifyContent: "center",
     top: 20,

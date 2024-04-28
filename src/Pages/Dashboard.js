@@ -4,7 +4,7 @@ import Menu from "../Component/Menu";
 import Banner from "../Component/Banner/DashboardBanner";
 import { PostContext } from "../context/postContext";
 
-const headlogo = require("../../assets/download.png");
+const headlogo = require("../../assets/SHAPE.png");
 const header = require("../../assets/header.png");
 const carlogo = require("../../assets/carlogo.png");
 const applogo = require("../../assets/applogo.png");
@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#17171f",
   },
   topContainer: {
     flexDirection: "row",
@@ -165,43 +166,45 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   carbuttonStyle: {
-    backgroundColor: "#D8D6F7",
+    backgroundColor: "#342d4e",
     borderRadius: 26,
     paddingVertical: 29,
     width: 340,
-    height: 81,
+    height: 75,
     marginBottom: 10,
   },
   appbuttonStyle: {
-    backgroundColor: "#FED9EB",
+    backgroundColor: "#342d4e",
     borderRadius: 26,
     paddingVertical: 29,
     width: 340,
-    height: 81,
+    height: 75,
     marginBottom: 10,
   },
   apartbuttonStyle: {
-    backgroundColor: "#B3DFAC",
+    backgroundColor: "#342d4e",
     borderRadius: 26,
     paddingVertical: 29,
     width: 340,
-    height: 81,
+    height: 75,
     marginBottom: 10,
   },
   furnbuttonStyle: {
-    backgroundColor: "#FFE2AA",
+    backgroundColor: "#342d4e",
     borderRadius: 26,
     paddingVertical: 29,
     width: 340,
-    height: 81,
+    height: 75,
     marginBottom: 10,
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "appfont",
-    color: "black",
-    marginLeft: 25,
+    // fontWeight: "bold",
+    color: "white",
+    marginLeft: 30,
     marginBottom: 27,
+    // lineHeight: 22, // Adjust the line height as per your preference
   },
   btnImageStyle: {
     width: 60,
@@ -217,9 +220,9 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: "white",
+    backgroundColor: "#1c1c28",
     position: "absolute",
-    top: -24,
+    top: -26,
     left: 10,
   },
   bottomMenu: {

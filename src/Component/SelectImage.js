@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB (in bytes)
@@ -39,38 +39,34 @@ const SelectImage = ({ onSelectImage }) => {
     <>
       <TouchableOpacity
         onPress={() => openImageLibrary("gallery")}
-        style={{
-          height: 50,
-          width: 173,
-          justifyContent: "center",
-          alignItems: "center",
-          borderStyle: "dashed",
-          borderWidth: 1,
-          borderRadius: 5,
-          marginRight: 5,
-        }}
+        style={[styles.button, { marginRight: 5 }]}
       >
-        <Text>Select from Gallery</Text>
+        <Text style={styles.buttonText}>Select From Gallery</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => openImageLibrary("camera")}
-        style={{
-          height: 50,
-          width: 173,
-          justifyContent: "center",
-          alignItems: "center",
-          borderStyle: "dashed",
-          borderWidth: 1,
-          borderRadius: 5,
-          marginRight: 5,
-        }}
+        style={styles.button}
       >
-        <Text>Take Photo</Text>
+        <Text style={styles.buttonText}>Take Photo</Text>
       </TouchableOpacity>
     </>
   );
 };
 
-// const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  button: {
+    height: 50,
+    width: 173,
+    justifyContent: "center",
+    alignItems: "center",
+    borderStyle: "dashed",
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "white",
+  },
+  buttonText: {
+    color: "white",
+  },
+});
 
 export default SelectImage;

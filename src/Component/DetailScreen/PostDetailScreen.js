@@ -160,17 +160,17 @@ const PostDetailScreen = ({ route }) => {
   };
 
   return (
-    <View>
-      <Ionicons
+    <View style={styles.superContainer}>
+      {/* <Ionicons
         name="arrow-back-sharp"
         size={30}
         color="white"
         style={{ top: -200, left: 12 }}
         onPress={() => handleBackButton()}
-      />
-      <View style={styles.superContainer}>
+      /> */}
+      <View>
         <View style={styles.headerStyle}>
-          <Text style={styles.headerText}>SUBSCRIBE YOUR CAR</Text>
+          <Text style={styles.headerText}>SUBSCRIBE</Text>
         </View>
         <View style={styles.overallContainer}>
           <View style={styles.outerContainer}>
@@ -356,29 +356,33 @@ const PostDetailScreen = ({ route }) => {
 
 const styles = StyleSheet.create({
   superContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    top: 40,
+    backgroundColor: "#17171f",
+
+    bottom: 10,
   },
   overallContainer: {
     justifyContent: "center",
     alignItems: "center",
+    top: 40,
   },
   outerContainer: {
     top: 30,
     height: 540,
     //height: 580,
     width: 380,
-    backgroundColor: "#D9D9D9",
-    borderRadius: 25,
-    marginBottom: 60,
+    backgroundColor: "#563978",
+    borderRadius: 10,
+    marginBottom: 80,
   },
   innerMainContainer: {
     top: -40,
     width: 360,
     height: 325,
     backgroundColor: "#FFFFFF",
-    borderRadius: 20,
+    borderRadius: 10,
     left: 10,
   },
   imageContainer: {
@@ -391,11 +395,11 @@ const styles = StyleSheet.create({
     bottom: 50,
   },
   headerStyle: {
-    backgroundColor: "#D8D6F7",
+    backgroundColor: "#563978",
     borderRadius: 26,
     width: 375,
-    height: 81,
-    top: -30,
+    height: 60,
+    top: 10,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -521,14 +525,9 @@ const styles = StyleSheet.create({
   },
   bottomMenu: {
     position: "absolute",
-    bottom: -52,
-    // bottom: 160,
-    //phone
-    //bottom: -70,
+    bottom: 10,
     left: 0,
     right: 0,
-    borderTopWidth: 2,
-    borderTopColor: "#DDDDDD",
   },
   ownPostText: {
     fontSize: 15,
@@ -563,6 +562,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    bottom: 20,
   },
 });
 

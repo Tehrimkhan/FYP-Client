@@ -123,7 +123,7 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
         <TouchableOpacity
           onPress={toggleRangeFilter}
           style={{
-            top: 10,
+            top: 5,
             left: 300,
             bottom: 10,
           }}
@@ -131,7 +131,7 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
           <FontAwesome
             name={showRangeFilter ? "chevron-up" : "chevron-down"}
             size={24}
-            color="black"
+            color="#fff"
           />
         </TouchableOpacity>
 
@@ -140,12 +140,12 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
           <View style={styles.filterContainer}>
             <View style={styles.rangeFilterContainer}>
               <TextInput
-                style={[styles.inputStyle, { marginRight: 30 }]}
+                style={[styles.inputStyle, { marginRight: 10 }]}
                 placeholder="From"
                 keyboardType="numeric"
                 value={fromPrice}
                 onChangeText={(value) => setFromPrice(value)}
-                placeholderTextColor="#888"
+                placeholderTextColor="#fff"
               />
               <TextInput
                 style={styles.inputStyle}
@@ -153,11 +153,18 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
                 keyboardType="numeric"
                 value={toPrice}
                 onChangeText={(value) => setToPrice(value)}
-                placeholderTextColor="#888"
+                placeholderTextColor="#fff"
               />
             </View>
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
-              <FontAwesome name="sliders" size={24} color="black" left={15} />
+            <TouchableOpacity
+              onPress={() => setModalVisible(true)}
+              style={{
+                position: "absolute",
+                right: 15,
+                top: 10,
+              }}
+            >
+              <FontAwesome name="sliders" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
         )}
@@ -194,7 +201,7 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
                   <Text style={styles.titleHeading}>{post?.name}</Text>
                   <Text style={styles.titleHeading}>
                     {post.room
-                      ? `Room: ${post.room}`
+                      ? ` Room: ${post.room}`
                       : post.model
                       ? ` Model: ${post.model}`
                       : ` Color: ${post.color}`}
@@ -264,11 +271,11 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
 const styles = StyleSheet.create({
   container: {},
   innerContainer: {
-    height: 294,
+    height: 290,
     width: 338,
-    backgroundColor: "#D9D9D9",
+    backgroundColor: "#563978",
     borderRadius: 25,
-    marginBottom: 5,
+    marginBottom: 20,
     marginTop: 10,
   },
   card: {
@@ -276,13 +283,13 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "cover",
     overflow: "hidden",
-    borderRadius: 25,
-    backgroundColor: "#D9D9D9",
+    borderRadius: 15,
+    backgroundColor: "#342d4e",
   },
   innerTextContainer: {
     height: 70,
-    backgroundColor: "white",
-    borderRadius: 25,
+    backgroundColor: "#fff",
+    borderRadius: 15,
     bottom: 10,
     marginLeft: 5,
     marginRight: 5,
@@ -319,24 +326,26 @@ const styles = StyleSheet.create({
   },
   rangeFilterContainer: {
     flexDirection: "row",
-    alignItems: "center", // Align items horizontally
-    marginBottom: 10,
+    alignItems: "center",
+    marginBottom: 5,
+    marginTop: 5,
   },
   inputStyle: {
-    width: 100, // Adjust the width as needed
+    width: 100,
     height: 30,
     borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
-    marginRight: 10, // Add margin between inputs
+    marginRight: 10,
+    color: "#fff",
   },
   applyButtonContainer: {
-    marginLeft: 10, // Add margin between inputs and button
+    marginLeft: 10,
   },
   applyButton: {
-    paddingVertical: 5, // Reduce padding vertically
-    paddingHorizontal: 10, // Reduce padding horizontally
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     backgroundColor: "#007bff",
     color: "#fff",
     borderRadius: 5,

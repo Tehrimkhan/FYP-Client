@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Image } from "react-native";
 
-const headlogo = require("../../assets/download.png");
+const headlogo = require("../../assets/SHAPE.png");
 const header = require("../../assets/header.png");
 
 const Background = () => {
@@ -28,7 +28,7 @@ const Background = () => {
 const styles = StyleSheet.create({
   bgContainer: {
     flex: 1,
-    backgroundColor: "#F2F2F2",
+    backgroundColor: "#17171f",
   },
   headerContainer: {
     // backgroundColor: "#F2F2F2",

@@ -220,7 +220,7 @@ const ChatMessagePage = ({ route }) => {
             <AntDesign
               name="doubleleft"
               size={24}
-              color="black"
+              color="#fff"
               marginLeft={5}
             />
           </TouchableOpacity>
@@ -265,6 +265,8 @@ const ChatMessagePage = ({ route }) => {
               }
             }}
             onFocus={handleKeyboardShow}
+            selectionColor="#fff"
+            color="#fff"
           />
           <View style={styles.sendButtonContainer}>
             <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
@@ -283,6 +285,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-end",
+    backgroundColor: "#17171f",
   },
   header: {
     flexDirection: "row",
@@ -297,6 +300,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     marginRight: "auto",
+    color: "#fff",
   },
   profileImage: {
     width: 30,
@@ -334,10 +338,11 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#342d4e",
     borderTopWidth: 1,
     borderTopColor: "#ccc",
     padding: 10,
+    height: 60,
   },
   emojiButton: {
     padding: 5,
@@ -348,8 +353,9 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 20,
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: 5,
     marginRight: 10,
+    color: "#fff",
   },
   sendButton: {
     padding: 10,
@@ -357,7 +363,7 @@ const styles = StyleSheet.create({
   },
   sendButtonContainer: {
     padding: 1,
-    backgroundColor: "#20A090",
+    backgroundColor: "#9c80e7",
     borderRadius: 25,
   },
   noMessagesContainer: {
@@ -376,10 +382,10 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   currentUserBubble: {
-    backgroundColor: "#20A090",
+    backgroundColor: "#9E72C3",
   },
   otherUserBubble: {
-    backgroundColor: "#29ABCA",
+    backgroundColor: "#4A2574",
   },
   loadingContainer: {
     flex: 1,

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Dimensions,
+} from "react-native";
 import AdsCards from "../Component/Banner/AdsCards";
 import { API } from "../api/config";
 import Background from "../Component/Background";
@@ -10,6 +17,9 @@ const MyAdsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [sortOption, setSortOption] = useState(null);
   const [searchText, setSearchText] = useState("");
+
+  const windowHeight = Dimensions.get("window").height;
+
   const getUserPosts = async () => {
     try {
       const response = await API.get("/post/get-user-post");
@@ -28,33 +38,46 @@ const MyAdsPage = () => {
   }, []);
   return (
     <View style={styles.container}>
-      <Background />
-      <View style={styles.searchContainer}>
-        <Text style={styles.heading}>MY ADS</Text>
+      <View style={styles.bgcontainer}>
+        <Background />
       </View>
       <View style={styles.innerContainer}>
         {isLoading ? (
-          <Image
-            source={require("../../assets/Spinner-1s-200px.gif")}
-            style={{ width: 50, height: 50 }}
-          />
+          <View style={styles.spinnerContainer}>
+            <Image
+              source={require("../../assets/Spinner-1s-200px.gif")}
+              style={{ width: 50, height: 50 }}
+            />
+          </View>
         ) : (
-          <>
-            {posts.length === 0 ? ( // Check if posts array is empty
-              <Text style={styles.noPostText}>No posts found.</Text>
-            ) : (
-              <ScrollView>
-                <AdsCards
-                  posts={posts}
-                  myPostScreen={true}
-                  searchText={searchText}
-                  sortOption={sortOption}
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: windowHeight - 280, // Note: Make sure windowHeight is defined
+            }}
+          >
+            {posts.length === 0 ? (
+              <View style={styles.noPostsContainer}>
+                <Image
+                  source={require("../../assets/NFI.png")}
+                  style={styles.noPostsImage}
                 />
-              </ScrollView>
+                <Text style={styles.npfText}>No Posts Found!</Text>
+              </View>
+            ) : (
+              <AdsCards
+                posts={posts}
+                myPostScreen={true}
+                searchText={searchText}
+                sortOption={sortOption}
+              />
             )}
-          </>
+          </ScrollView>
         )}
       </View>
+
       <View style={styles.bottomMenu}>
         <Menu />
       </View>
@@ -65,51 +88,22 @@ const MyAdsPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: "relative",
+    backgroundColor: "#17171f",
   },
-  searchContainer: {
-    backgroundColor: "#D8D6F7",
+  bgcontainer: {
     position: "absolute",
-    top: 155,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 26,
-    width: 375,
-    left: 8,
-    height: 81,
-  },
-  innerContainer: {
-    //top: -90,
-    top: -60,
   },
 
-  scrollContainer: {
-    height: 500,
-    marginTop: 5,
-    bottom: -20,
-    // bottom: 50,
+  innerContainer: {
+    flex: 1,
+    paddingTop: 220,
+    marginBottom: 50,
+  },
+  spinnerContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  noPostText: {
-    fontSize: 20,
-    color: "gray",
-    textAlign: "center",
-    justifyContent: "center",
-  },
-  lengthText: {
-    top: 15,
-    left: 25,
-  },
-  heading: {
-    fontSize: 30,
-    fontFamily: "appfont",
-    color: "#FAFBFF",
-    textShadowColor: "rgba(0, 0, 0, 0.75)",
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
-  },
-  scrollviewContainer: {
-    height: 200,
   },
   bottomMenu: {
     position: "absolute",
@@ -118,6 +112,22 @@ const styles = StyleSheet.create({
     right: 0,
     borderTopWidth: 2,
     borderTopColor: "#DDDDDD",
+  },
+  npfText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noPostsContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noPostsImage: {
+    width: 50,
+    height: 50,
+    marginBottom: 20,
   },
 });
 

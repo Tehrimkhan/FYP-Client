@@ -131,37 +131,37 @@ const FurnitureAdPage = () => {
             style={styles.input}
             onChangeText={(text) => setName(text)}
             value={name}
-            placeholder="Enter Name"
+            placeholder="Enter Name.."
           />
           <TextInput
             style={styles.input}
             onChangeText={(text) => setColor(text)}
             value={color}
-            placeholder="Enter Color"
+            placeholder="Enter Color.."
           />
           <TextInput
             style={styles.input}
             onChangeText={(text) => setMaterial(text)}
             value={material}
-            placeholder="Enter Material"
+            placeholder="Enter Material.."
           />
           <TextInput
             style={styles.input}
             onChangeText={(text) => setStyle(text)}
             value={style}
-            placeholder="Enter Style"
+            placeholder="Enter Style.."
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input]} // Update color to white
             onChangeText={(text) => setRent(text)}
             value={rent}
-            placeholder="Enter Rent"
+            placeholder="Enter Rent.."
           />
           <TextInput
-            style={styles.input}
+            style={[styles.descinput]} // Update color to white
             onChangeText={(text) => setDescription(text)}
             value={description}
-            placeholder="Enter Description"
+            placeholder="Enter Description.."
             multiline={true}
             numberOfLines={6}
           />
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
   innerContainer: {
-    paddingTop: 150, // Adjusted paddingTop
+    paddingTop: 150,
   },
   Selectioncontainer: {
     flexDirection: "row",
@@ -204,11 +204,10 @@ const styles = StyleSheet.create({
   backgroundContainer: {
     flex: 1,
     position: "absolute",
-    top: 0, // Adjusted top position
+    top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "#f0f0f0",
   },
   image: {
     width: "100%",
@@ -220,18 +219,29 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: "gray",
+    borderColor: "#fff",
     borderWidth: 1,
     marginBottom: 15,
     paddingHorizontal: 10,
     borderRadius: 5,
     fontFamily: "appfont",
+    color: "#fff", // Remove or comment this line
+  },
+  descinput: {
+    height: 60,
+    borderColor: "#fff",
+    borderWidth: 1,
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    fontFamily: "appfont",
+    color: "#fff", // Remove or comment this line
   },
   saveButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#32A1A8",
+    backgroundColor: "#9c80e7",
     borderRadius: 5,
     paddingVertical: 10,
   },
@@ -243,7 +253,7 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     position: "absolute",
-    bottom: -80,
+    bottom: 0,
     left: 0,
     right: 0,
     borderTopWidth: 2,

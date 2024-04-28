@@ -138,43 +138,43 @@ const ApparelAdPage = ({ navigation }) => {
           ) : null}
 
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: "white" }]} // Update color to white
             onChangeText={(text) => setName(text)}
             value={name}
-            placeholder="Enter Name"
+            placeholder="Enter Name.."
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: "white" }]} // Update color to white
             onChangeText={(text) => setColor(text)}
             value={color}
-            placeholder="Enter Color"
+            placeholder="Enter Color.."
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: "white" }]} // Update color to white
             onChangeText={(text) => setFabric(text)}
             value={fabric}
-            placeholder="Enter Fabric"
+            placeholder="Enter Fabric.."
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: "white" }]} // Update color to white
             onChangeText={(text) => setSize(text)}
             value={size}
-            placeholder="Enter Size"
+            placeholder="Enter Size.."
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: "white" }]} // Update color to white
             onChangeText={(text) => setGender(text)}
             value={gender}
-            placeholder="Enter Category"
+            placeholder="Enter Category.."
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: "white" }]} // Update color to white
             onChangeText={(text) => setRent(text)}
             value={rent}
-            placeholder="Enter Rent"
+            placeholder="Enter Rent.."
           />
           <TextInput
-            style={styles.descinput}
+            style={[styles.descinput, { color: "white" }]} // Update color to white
             onChangeText={(text) => setDescription(text)}
             value={description}
             placeholder="Enter Description.."
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
   innerContainer: {
-    paddingTop: 150, // Adjusted paddingTop
+    paddingTop: 150,
   },
   Selectioncontainer: {
     flexDirection: "row",
@@ -220,11 +220,10 @@ const styles = StyleSheet.create({
   backgroundContainer: {
     flex: 1,
     position: "absolute",
-    top: 0, // Adjusted top position
+    top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "#f0f0f0",
   },
   image: {
     width: "100%",
@@ -236,29 +235,29 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: "gray",
+    borderColor: "#fff",
     borderWidth: 1,
     marginBottom: 15,
     paddingHorizontal: 10,
     borderRadius: 5,
     fontFamily: "appfont",
-    color: "gray",
+    color: "#888", // Remove or comment this line
   },
   descinput: {
     height: 60,
-    borderColor: "gray",
+    borderColor: "#fff",
     borderWidth: 1,
     marginBottom: 15,
     paddingHorizontal: 10,
     borderRadius: 5,
     fontFamily: "appfont",
-    color: "gray",
+    color: "#888", // Remove or comment this line
   },
   saveButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#32A1A8",
+    backgroundColor: "#9c80e7",
     borderRadius: 5,
     paddingVertical: 10,
   },

@@ -16,40 +16,60 @@ import { FontAwesome } from "@expo/vector-icons";
 const Menu = () => {
   const navigation = useNavigation();
   const screenWidth = Dimensions.get("window").width;
-  const buttonWidth = screenWidth / 5; // Divide the screen width by the number of buttons
+  const buttonWidth = screenWidth / 5;
 
   return (
     <View style={styles.menuContainer}>
       <View style={styles.mainContainer}>
         <TouchableOpacity
-          style={[styles.buttonStyle, { width: buttonWidth }]} // Set the width dynamically
+          style={[styles.buttonStyle, { width: buttonWidth }]}
           onPress={() => navigation.navigate("Dashboard")}
         >
-          <MaterialIcons name="home" size={24} color="black" />
+          <MaterialIcons
+            name="home"
+            size={20}
+            color="white"
+            style={styles.iconStyle}
+          />
           <Text style={styles.textStyle}>HOME</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.buttonStyle, { width: buttonWidth }]} // Set the width dynamically
+          style={[styles.buttonStyle, { width: buttonWidth }]}
           onPress={() => navigation.navigate("ChatPage")}
         >
-          <Entypo name="chat" size={24} color="black" />
+          <Entypo
+            name="chat"
+            size={20}
+            color="white"
+            style={styles.iconStyle}
+          />
           <Text style={styles.textStyle}>CHATS</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.buttonStyle, { width: buttonWidth }]} // Set the width dynamically
+          style={[styles.buttonStyle, { width: buttonWidth }]}
           onPress={() => navigation.navigate("SellerPage")}
         >
-          <Ionicons name="add-circle" size={24} color="black" />
+          <Ionicons
+            name="add-circle"
+            size={20}
+            color="white"
+            style={styles.iconStyle}
+          />
           <Text style={styles.textStyle}>SELL</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.buttonStyle, { width: buttonWidth }]} // Set the width dynamically
+          style={[styles.buttonStyle, { width: buttonWidth }]}
           onPress={() => navigation.navigate("MyAdsPage")}
         >
-          <FontAwesome5 name="buysellads" size={24} color="black" />
+          <FontAwesome5
+            name="buysellads"
+            size={20}
+            color="white"
+            style={styles.iconStyle}
+          />
           <Text style={styles.textStyle}>MY ADS</Text>
         </TouchableOpacity>
 
@@ -61,7 +81,12 @@ const Menu = () => {
           //   navigation.navigate("YouPage");
           // }}
         >
-          <FontAwesome name="user" size={24} color="black" />
+          <FontAwesome
+            name="user"
+            size={20}
+            color="white"
+            style={styles.iconStyle}
+          />
           <Text style={styles.textStyle}>YOU</Text>
         </TouchableOpacity>
       </View>
@@ -81,12 +106,22 @@ const styles = StyleSheet.create({
   buttonStyle: {
     justifyContent: "center",
     alignItems: "center",
-    height: 58,
-    backgroundColor: "#33CCCC",
+    height: 65,
+    backgroundColor: "#9c80e7",
     top: 20,
   },
   textStyle: {
     fontWeight: "bold",
+    top: 2,
+  },
+  iconStyle: {
+    top: 2,
+    borderWidth: 1,
+    borderColor: "black",
+    padding: 8,
+    borderRadius: 50,
+    backgroundColor: "#17171f",
+    bottom: 5,
   },
 });
 

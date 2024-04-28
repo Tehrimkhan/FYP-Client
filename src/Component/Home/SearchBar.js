@@ -61,7 +61,7 @@ const SearchBar = ({
                 <FontAwesome5
                   name="search"
                   size={24}
-                  color="black"
+                  color="#fff"
                   style={styles.icon}
                 />
               </View>
@@ -124,21 +124,24 @@ const styles = StyleSheet.create({
   searchContainer: {
     alignItems: "center",
     marginTop: 20,
+    width: 375,
+    height: 60,
   },
   inputStyle: {
     paddingHorizontal: 25,
     fontSize: 15,
     flex: 1,
+    color: "white",
   },
   searchbuttonStyle: {
-    backgroundColor: "#D8D6F7",
+    backgroundColor: "#563978",
     display: "flex",
     flexDirection: "row",
     gap: 5,
     alignItems: "center",
     borderRadius: 26,
     width: 375,
-    height: 81,
+    height: 60,
   },
   buttonContent: {
     flexDirection: "row",
@@ -146,19 +149,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   circle: {
-    width: 70,
-    height: 70,
+    width: 50,
+    height: 50,
     borderRadius: 35,
     backgroundColor: "white",
     position: "absolute",
-    top: -10,
     left: 10,
   },
   btnImageStyle: {
-    width: 60,
+    width: 50,
     height: 50,
-    left: 10,
-    bottom: 0,
+    left: 8,
+    bottom: 3,
   },
   iconContainer: {
     flexDirection: "row",

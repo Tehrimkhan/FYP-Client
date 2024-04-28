@@ -22,9 +22,12 @@ const SellerPage = ({ navigation }) => {
     <View style={styles.bgContainer}>
       <Background />
       <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => backButton()}>
-          <Ionicons name="arrow-back-circle-sharp" size={25} color="black" />
-        </TouchableOpacity>
+        {/* <TouchableOpacity
+          onPress={() => backButton()}
+          style={styles.backButton}
+        >
+          <Ionicons name="arrow-back-circle-sharp" size={25} color="white" />
+        </TouchableOpacity> */}
         <Text style={styles.headerText}>WHAT ARE YOU OFFERING?</Text>
       </View>
       <View style={styles.btnContainer}>
@@ -59,16 +62,17 @@ const SellerPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   bgContainer: {
     flex: 1,
-    position: "relative", // Change to relative
-    backgroundColor: "#f0f0f0",
+    position: "relative",
+    backgroundColor: "#17171f",
   },
   headerContainer: {
     flexDirection: "row",
-
     height: 55,
     width: "100%", // Change to 100%
-    alignItems: "center",
+    justifyContent: "center", // Center buttons vertically
+    alignItems: "center", // Center buttons horizontally
     paddingHorizontal: 10,
+    backgroundColor: "#342d4e",
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
@@ -79,15 +83,19 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 10,
     position: "absolute", // Position absolutely at the top
-    top: 170,
-    left: 0,
-    right: 0,
+    top: 160,
+    left: 10,
+  },
+  backButton: {
+    position: "absolute", // Position absolutely
+    left: 10, // Adjust left position
   },
   headerText: {
-    color: "#9d626b",
+    justifyContent: "center", // Center buttons vertically
+    alignItems: "center", // Center buttons horizontally
+    color: "#fff",
     fontSize: 15,
     fontWeight: "bold",
-    marginLeft: 60,
   },
   btnContainer: {
     flex: 1,
@@ -98,7 +106,7 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     position: "absolute",
-    bottom: 15,
+    bottom: 20,
     left: 0,
     right: 0,
     borderTopWidth: 2,

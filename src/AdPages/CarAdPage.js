@@ -1,14 +1,16 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   Alert,
   Image,
   ActivityIndicator,
+  ScrollView,
+  Keyboard,
+  Platform,
   Dimensions,
 } from "react-native";
 import Background from "../Component/Background";
@@ -74,6 +76,20 @@ const CarAdPage = ({ navigation }) => {
     navigation.navigate("PaymentPage", { paymentData });
   };
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  const scrollViewRef = useRef();
   const handleSubmit = async () => {
     setIsLoading(true);
 
@@ -114,69 +130,72 @@ const CarAdPage = ({ navigation }) => {
         <Background />
       </View>
       <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.scrollContainer}
+        ref={scrollViewRef}
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.Selectioncontainer}>
-          {!postImages && <SelectImage onSelectImage={handleImageSelect} />}
+        <View style={styles.innerContainer}>
+          <View style={styles.Selectioncontainer}>
+            {!postImages && <SelectImage onSelectImage={handleImageSelect} />}
+          </View>
+          {postImages ? (
+            <Image source={{ uri: postImages }} style={styles.image} />
+          ) : null}
+
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setName(text)}
+            value={name}
+            placeholder="Enter Name.."
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setMake(text)}
+            value={make}
+            placeholder="Enter Make.."
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setModel(text)}
+            value={model}
+            placeholder="Enter Model.."
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setVariant(text)}
+            value={variant}
+            placeholder="Enter Variant.."
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setRent(text)}
+            value={rent}
+            placeholder="Enter Rent.."
+          />
+          <TextInput
+            style={[styles.descinput]} // Update color to white
+            onChangeText={(text) => setDescription(text)}
+            value={description}
+            placeholder="Enter Description.."
+            multiline={true}
+            numberOfLines={6}
+          />
+
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={() => handleSubmit(token)}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <>
+                <MaterialIcons name="add-box" size={24} color="white" />
+                <Text style={styles.buttonText}>CREATE POST</Text>
+              </>
+            )}
+          </TouchableOpacity>
         </View>
-        {postImages ? (
-          <Image source={{ uri: postImages }} style={styles.image} />
-        ) : null}
-
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setName(text)}
-          value={name}
-          placeholder="Enter Name"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setMake(text)}
-          value={make}
-          placeholder="Enter Make"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setModel(text)}
-          value={model}
-          placeholder="Enter Model"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setVariant(text)}
-          value={variant}
-          placeholder="Enter Variant"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setRent(text)}
-          value={rent}
-          placeholder="Enter Rent"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setDescription(text)}
-          value={description}
-          placeholder="Enter Description"
-          multiline={true}
-          numberOfLines={6}
-        />
-
-        <TouchableOpacity
-          style={styles.saveButton}
-          onPress={() => handleSubmit(token)}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator size="small" color="white" />
-          ) : (
-            <>
-              <MaterialIcons name="add-box" size={24} color="white" />
-              <Text style={styles.buttonText}>CREATE POST</Text>
-            </>
-          )}
-        </TouchableOpacity>
       </ScrollView>
       <View style={styles.menuContainer}>
         <Menu />
@@ -187,8 +206,11 @@ const CarAdPage = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    top: 150,
     padding: 20,
+    paddingBottom: 80,
+  },
+  innerContainer: {
+    paddingTop: 150,
   },
   Selectioncontainer: {
     flexDirection: "row",
@@ -201,7 +223,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "#f0f0f0",
   },
   image: {
     width: "100%",
@@ -213,18 +234,29 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: "gray",
+    borderColor: "#fff",
     borderWidth: 1,
     marginBottom: 15,
     paddingHorizontal: 10,
     borderRadius: 5,
     fontFamily: "appfont",
+    color: "#fff", // Remove or comment this line
+  },
+  descinput: {
+    height: 60,
+    borderColor: "#fff",
+    borderWidth: 1,
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    fontFamily: "appfont",
+    color: "#fff", // Remove or comment this line
   },
   saveButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#32A1A8",
+    backgroundColor: "#9c80e7",
     borderRadius: 5,
     paddingVertical: 10,
   },
@@ -236,13 +268,12 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     position: "absolute",
-    bottom: -290,
-
+    bottom: 0,
     left: 0,
     right: 0,
     borderTopWidth: 2,
     borderTopColor: "#DDDDDD",
-    height: 50, // Adjust the height of the menu container
+    height: 50,
   },
 });
 export default CarAdPage;

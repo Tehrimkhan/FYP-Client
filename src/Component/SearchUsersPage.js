@@ -71,24 +71,32 @@ const SearchUsersPage = ({ allUsers, onSearch }) => {
         <TextInput
           style={styles.searchInput}
           placeholder="Search..."
+          placeholderTextColor="#fff"
           value={searchQuery}
           onChangeText={setSearchQuery}
+          color="#fff"
         />
         <TouchableOpacity
           style={styles.searchIconContainer}
           onPress={() => navigation.navigate("ChatPage", { searchQuery })}
         >
-          <FontAwesome name="search" size={20} color="#666" />
+          <FontAwesome name="search" size={20} color="#fff" />
         </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={styles.chatContainer}>
         {searchQuery === "" ? (
           <View style={styles.centeredMessage}>
-            <Text>Start Searcing...</Text>
+            <FontAwesome
+              name="search-plus"
+              size={24}
+              color="white"
+              bottom={10}
+            />
+            <Text style={styles.text}>Start Searcing...</Text>
           </View>
         ) : filteredConversations.length === 0 ? (
           <View style={styles.centeredMessage}>
-            <Text>No results found</Text>
+            <Text style={styles.text}>No results found</Text>
           </View>
         ) : (
           filteredConversations.map((user, index) => (
@@ -126,16 +134,16 @@ const SearchUsersPage = ({ allUsers, onSearch }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F2F2F2",
+    backgroundColor: "#17171f",
     justifyContent: "space-between",
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#342d4e",
     borderRadius: 20,
     paddingHorizontal: 10,
-    marginTop: 50,
+    marginTop: 10,
     marginLeft: 10,
     marginRight: 10,
     borderWidth: 1,
@@ -144,6 +152,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     paddingVertical: 10,
+    color: "#fff",
   },
   searchIconContainer: {
     padding: 10,
@@ -172,6 +181,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 7,
     fontSize: 17,
+    color: "#fff",
   },
   message: {},
   time: {
@@ -188,6 +198,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  text: {
+    color: "#fff",
   },
 });
 

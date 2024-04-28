@@ -89,14 +89,16 @@ const ChatPage = ({ route }) => {
         <TextInput
           style={styles.searchInput}
           placeholder="Search..."
+          placeholderTextColor="#fff"
           value={searchQuery}
           onChangeText={setSearchQuery}
+          color="#fff"
         />
         <TouchableOpacity
           style={styles.searchIconContainer}
           onPress={() => navigation.navigate("ChatPage", { searchQuery })}
         >
-          <FontAwesome name="search" size={20} color="#666" />
+          <FontAwesome name="search" size={20} color="#fff" />
         </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={styles.chatContainer}>
@@ -163,11 +165,11 @@ const ChatPage = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F2F2F2",
+    backgroundColor: "#17171f",
     justifyContent: "space-between",
   },
   header: {
-    backgroundColor: "#33CCCC",
+    backgroundColor: "#9c80e7",
     padding: 15,
     alignItems: "center",
   },
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#342d4e",
     borderRadius: 20,
     paddingHorizontal: 10,
     marginTop: 10,
@@ -191,6 +193,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     paddingVertical: 10,
+    color: "#fff",
   },
   searchIconContainer: {
     padding: 10,
@@ -217,12 +220,15 @@ const styles = StyleSheet.create({
   user: {
     fontWeight: "bold",
     marginBottom: 5,
+    color: "#fff",
   },
-  message: {},
+  message: {
+    color: "#fff",
+  },
   time: {
     marginTop: 20,
     marginLeft: 10,
-    color: "gray",
+    color: "lightgray",
   },
   line: {
     marginBottom: 10,
@@ -234,9 +240,9 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 65,
+    bottom: 80,
     right: 20,
-    backgroundColor: "#33CCCC",
+    backgroundColor: "#9c80e7",
     width: 50,
     height: 50,
     borderRadius: 25,

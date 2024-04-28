@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: "relative",
+    backgroundColor: "#17171f",
   },
   bgcontainer: {
     position: "absolute",
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    paddingTop: 220,
+    paddingTop: 200,
     marginBottom: 50,
   },
   spinnerContainer: {
