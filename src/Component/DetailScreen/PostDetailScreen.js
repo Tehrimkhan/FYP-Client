@@ -8,6 +8,9 @@ import {
   TouchableOpacity,
   Alert,
   TextInput,
+  Switch,
+  Modal,
+  Button,
 } from "react-native";
 import Background from "../Background";
 import Menu from "../Menu";
@@ -29,14 +32,70 @@ const PostDetailScreen = ({ route }) => {
   const [loadingComments, setLoadingComments] = useState(true); // Add loading state for comments
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [active, setActive] = useState(post.active);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [dob, setDOB] = useState("");
+  const [address, setAddress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [statusModalVisible, setStatusModalVisible] = useState(false);
+  const postName = post.name;
 
   const navigation = useNavigation();
 
   const profileImage = post?.postedBy?.profileImage?.[0]?.secure_url;
-  console.log("Profile Image:", profileImage);
+  //console.log("Profile Image:", profileImage);
 
   const handleBackButton = () => {
     navigation.navigate("Dashboard");
+  };
+  const handleSubmitModal = async () => {
+    if (!fullName || !dob || !address || !phoneNumber || !email) {
+      alert("Please fill in all fields");
+      return;
+    } else {
+      try {
+        const token = API.defaults.headers.common["Authorization"];
+
+        if (!token || token.trim() === "") {
+          alert("Authorization token missing. Please log in.");
+          return;
+        }
+        const data = await API.post(
+          "/renter/register-renter",
+          {
+            postName,
+            fullName,
+            dob,
+            address,
+            phoneNumber,
+            email,
+          },
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        if (data && data.data) {
+          alert("Registered Successfully!");
+
+          setFullName("");
+          setDOB("");
+          setAddress("");
+          setPhoneNumber("");
+          setEmail("");
+          setModalVisible(false);
+          setStatusModalVisible(false);
+        } else {
+          alert("Data is Undefined!");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Error registering renter");
+      }
+    }
   };
   const handleSubmit = () => {
     if (post?.postedBy?._id && post?.postedBy?.name) {
@@ -159,6 +218,37 @@ const PostDetailScreen = ({ route }) => {
     }
   };
 
+  const handleStatusChange = async () => {
+    try {
+      const response = await API.put(
+        `/post/status/${post._id}`,
+        {
+          active: !active,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setActive(!active);
+        if (active) {
+          setStatusModalVisible(true);
+        } else {
+          alert(`Post ${active ? "deactivated" : "activated"} successfully`);
+        }
+      } else {
+        console.error(response.data.message);
+        alert("Error changing post status");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error changing post status");
+    }
+  };
+
   return (
     <View style={styles.superContainer}>
       {/* <Ionicons
@@ -207,6 +297,20 @@ const PostDetailScreen = ({ route }) => {
                     | Rent: {post?.rent}
                   </Text>
                 </View>
+                {myPostScreen && (
+                  <View style={styles.statusButtonContainer}>
+                    {/* <Text style={styles.statusText}>
+                      {active ? "Active" : "Inactive"}
+                    </Text> */}
+                    <Switch
+                      value={active}
+                      onValueChange={handleStatusChange}
+                      trackColor={{ false: "#767577", true: "#81b0ff" }}
+                      thumbColor={active ? "#f5dd4b" : "#f4f3f4"}
+                      ios_backgroundColor="#3e3e3e"
+                    />
+                  </View>
+                )}
                 <View style={styles.lowerHeaderContainer}>
                   <Text style={styles.lowertitleHeading}>
                     {post.room
@@ -238,8 +342,8 @@ const PostDetailScreen = ({ route }) => {
                       flexDirection: "row",
                       alignItems: "center",
                       justifyContent: "center",
-                      top: 40,
-                      gap: 150,
+                      top: 30,
+                      left: 130,
                     }}
                   >
                     {/* <MaterialCommunityIcons
@@ -261,7 +365,7 @@ const PostDetailScreen = ({ route }) => {
                       { marginLeft: 10, top: 30 },
                     ]}
                   >
-                    Seller Name: {post?.postedBy?.name}
+                    Seller: {post?.postedBy?.name}
                   </Text>
                 )}
                 <View style={styles.ratingContainer}>
@@ -318,6 +422,57 @@ const PostDetailScreen = ({ route }) => {
                   <Text style={styles.subscribeButtonText}>SUBSCRIBE</Text>
                 </TouchableOpacity>
               )}
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={statusModalVisible}
+                onRequestClose={() => {
+                  setStatusModalVisible(false);
+                }}
+              >
+                <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                    <Text style={styles.modalTitle}>Post Deactivated</Text>
+                    <Text style={styles.modalTitle}>Enter Renter Details</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder={postName}
+                      editable={false}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Full Name"
+                      value={fullName}
+                      onChangeText={(text) => setFullName(text)}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Date of Birth"
+                      value={dob}
+                      onChangeText={(text) => setDOB(text)}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Home Address"
+                      value={address}
+                      onChangeText={(text) => setAddress(text)}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Phone Number"
+                      value={phoneNumber}
+                      onChangeText={(text) => setPhoneNumber(text)}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Email Address"
+                      value={email}
+                      onChangeText={(text) => setEmail(text)}
+                    />
+                    <Button title="Submit" onPress={handleSubmitModal} />
+                  </View>
+                </View>
+              </Modal>
               {userId === post?.postedBy?._id && (
                 <View style={styles.ownPostContainer}>
                   <Text style={styles.ownPostText}>THIS IS YOUR OWN POST</Text>
@@ -424,6 +579,12 @@ const styles = StyleSheet.create({
     textAlign: "left", // Align text to the left
     marginLeft: 10, // Add a left margin for consistent gap
   },
+  statusButtonContainer: {
+    justifyContent: "flex-end", // Changed to flex-end
+    paddingHorizontal: 20,
+    marginTop: -20,
+    left: "80%",
+  },
   lowerHeaderContainer: {
     top: 10,
     flexDirection: "row",
@@ -499,7 +660,7 @@ const styles = StyleSheet.create({
   },
   scrollviewContainer: {
     top: 10,
-    height: 100,
+    height: "100%",
     width: 340,
     left: 10,
   },
@@ -538,7 +699,7 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
   ownPostContainer: {
-    top: 5,
+    top: 62,
   },
   statusStyle: {
     alignItems: "center",
@@ -559,10 +720,34 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 0, 0, 0.3)",
   },
   loadingContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    top: 30,
+  },
+  modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    bottom: 20,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: "70%",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
   },
 });
 

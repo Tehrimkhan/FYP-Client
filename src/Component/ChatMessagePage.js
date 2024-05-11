@@ -19,7 +19,6 @@ import {
   Dimensions,
 } from "react-native";
 import { Entypo, FontAwesome, AntDesign } from "@expo/vector-icons";
-import EmojiSelector from "react-native-emoji-selector";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../context/authContext";
@@ -47,8 +46,6 @@ const ChatMessagePage = ({ route }) => {
   const { recieverName, profileImage, receiverId } = route.params;
   const [newMessage, setNewMessage] = useState("");
   const scrollViewRef = useRef();
-  const [showEmojiSelector, setShowEmojiSelector] = useState(false);
-  const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [senderId, setSenderId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -199,15 +196,6 @@ const ChatMessagePage = ({ route }) => {
     scrollToBottom();
   }, [messages]);
 
-  const handleEmojiPress = () => {
-    setShowEmojiSelector(!showEmojiSelector);
-    Keyboard.dismiss();
-  };
-
-  const handleKeyboardShow = () => {
-    setShowEmojiSelector(false);
-  };
-
   const navigateToChatPage = () => {
     navigation.navigate("ChatPage");
   };
@@ -244,12 +232,6 @@ const ChatMessagePage = ({ route }) => {
           {renderMessages()}
         </ScrollView>
         <View style={styles.inputContainer}>
-          <TouchableOpacity
-            style={styles.emojiButton}
-            onPress={handleEmojiPress}
-          >
-            <Entypo name="emoji-happy" size={24} color="#F9B700" />
-          </TouchableOpacity>
           <TextInput
             style={styles.input}
             value={newMessage}
@@ -264,9 +246,6 @@ const ChatMessagePage = ({ route }) => {
                 scrollViewRef.current.scrollToEnd({ animated: true });
               }
             }}
-            onFocus={handleKeyboardShow}
-            selectionColor="#fff"
-            color="#fff"
           />
           <View style={styles.sendButtonContainer}>
             <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
@@ -275,9 +254,6 @@ const ChatMessagePage = ({ route }) => {
           </View>
         </View>
       </View>
-      {showEmojiSelector && (
-        <EmojiSelector onEmojiSelected={setSelectedEmoji} />
-      )}
     </SafeAreaView>
   );
 };
@@ -343,9 +319,6 @@ const styles = StyleSheet.create({
     borderTopColor: "#ccc",
     padding: 10,
     height: 60,
-  },
-  emojiButton: {
-    padding: 5,
   },
   input: {
     flex: 1,

@@ -72,6 +72,7 @@ const MyAdsPage = () => {
                 myPostScreen={true}
                 searchText={searchText}
                 sortOption={sortOption}
+                isMyAdsPage={true} // Pass the prop indicating it's MyAdsPage
               />
             )}
           </ScrollView>

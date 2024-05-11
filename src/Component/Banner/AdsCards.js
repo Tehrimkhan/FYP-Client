@@ -18,7 +18,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
-const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
+const AdsCards = ({ posts, myPostScreen, userId, searchText, isMyAdsPage }) => {
   const navigation = useNavigation();
   const [sortedPosts, setSortedPosts] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -32,10 +32,26 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
   };
 
   const filterAndSortPosts = () => {
-    if (!showRangeFilter) {
-      return posts;
+    let filteredPosts = [...posts];
+
+    if (showRangeFilter) {
+      filteredPosts = filteredPosts.filter((post) => {
+        const postRent = parseInt(post?.rent);
+        const fromRent = parseInt(fromPrice);
+        const toRent = parseInt(toPrice);
+
+        if (!isNaN(fromRent) && !isNaN(toRent)) {
+          return postRent >= fromRent && postRent <= toRent;
+        } else if (!isNaN(fromRent)) {
+          return postRent >= fromRent;
+        } else if (!isNaN(toRent)) {
+          return postRent <= toRent;
+        }
+        return true;
+      });
     }
-    const filteredPosts = posts.filter((post) => {
+
+    const finalFilteredPosts = filteredPosts.filter((post) => {
       const name = post?.name?.toLowerCase() || "";
       const make = post?.make?.toLowerCase() || "";
       const model = post?.model?.toLowerCase() || "";
@@ -65,27 +81,12 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
           material.includes(searchText.toLowerCase()) ||
           style.includes(searchText.toLowerCase()) ||
           rent.includes(searchText.toLowerCase())) &&
-        post.rating &&
+        (post.rating || post.rating === 0) &&
         post.rating >= minRating
       );
     });
 
-    const rangeFilteredPosts = filteredPosts.filter((post) => {
-      const postRent = parseInt(post?.rent);
-      const fromRent = parseInt(fromPrice);
-      const toRent = parseInt(toPrice);
-
-      if (!isNaN(fromRent) && !isNaN(toRent)) {
-        return postRent >= fromRent && postRent <= toRent;
-      } else if (!isNaN(fromRent)) {
-        return postRent >= fromRent;
-      } else if (!isNaN(toRent)) {
-        return postRent <= toRent;
-      }
-      return true;
-    });
-
-    return sortedPosts.length ? sortedPosts : rangeFilteredPosts;
+    return sortedPosts.length ? sortedPosts : finalFilteredPosts;
   };
 
   const handleSortOption = (option) => {
@@ -101,6 +102,22 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
       );
     } else if (option === "alphabeticalOrder") {
       sortedPosts = sortedPosts.sort((a, b) => a.name?.localeCompare(b.name));
+    } else if (option === "showApartments") {
+      sortedPosts = sortedPosts.filter(
+        (post) => post.title.toLowerCase() === "apartment"
+      );
+    } else if (option === "showApparels") {
+      sortedPosts = sortedPosts.filter(
+        (post) => post.title.toLowerCase() === "apparel"
+      );
+    } else if (option === "showFurnitures") {
+      sortedPosts = sortedPosts.filter(
+        (post) => post.title.toLowerCase() === "furniture"
+      );
+    } else if (option === "showCars") {
+      sortedPosts = sortedPosts.filter(
+        (post) => post.title.toLowerCase() === "car"
+      );
     }
 
     setSortedPosts(sortedPosts);
@@ -254,6 +271,32 @@ const AdsCards = ({ posts, myPostScreen, userId, searchText }) => {
             >
               <Text style={styles.sortOption}>Alphabetical Order</Text>
             </TouchableOpacity>
+            {/* Conditionally render the additional option */}
+            {isMyAdsPage && (
+              <View>
+                <TouchableOpacity
+                  onPress={() => handleSortOption("showApartments")}
+                >
+                  <Text style={styles.sortOption}>Show Apartments</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => handleSortOption("showApparels")}
+                >
+                  <Text style={styles.sortOption}>Show Apparels</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => handleSortOption("showFurnitures")}
+                >
+                  <Text style={styles.sortOption}>Show Furnitures</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => handleSortOption("showCars")}>
+                  <Text style={styles.sortOption}>Show Cars</Text>
+                </TouchableOpacity>
+              </View>
+            )}
 
             <Pressable
               style={styles.closeButton}

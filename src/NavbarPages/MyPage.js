@@ -35,12 +35,15 @@ const MyPage = ({ navigation }) => {
   const [newPassword, setNewPassword] = useState("");
   const [newName, setNewName] = useState("");
   const [newEmail, setNewEmail] = useState("");
+  const [totalPostsCount, setTotalPostsCount] = useState(0);
+  const [nameCounts, setNameCounts] = useState([]);
 
   const userId = userIdArray?.data?.user?._id;
   const token = API.defaults.headers.common["Authorization"];
 
   useEffect(() => {
     getUserProfile();
+    getUserPostCount();
   }, []);
 
   const getUserProfile = async () => {
@@ -50,6 +53,8 @@ const MyPage = ({ navigation }) => {
 
       setUserName(user.name);
       setUserEmail(user.email);
+      setNewName(user.name); // Set initial value of newName
+      setNewEmail(user.email); // Set initial value of newEmail
 
       if (user.profileImage && user.profileImage.length > 0) {
         setProfileImage(user.profileImage[0].secure_url);
@@ -58,7 +63,20 @@ const MyPage = ({ navigation }) => {
       console.error("Error fetching user profile:", error);
     }
   };
-
+  const getUserPostCount = async () => {
+    try {
+      const response = await API.get("/post/user-postcount", {
+        headers: {
+          Authorization: token,
+        },
+      });
+      const { data } = response.data;
+      setTotalPostsCount(data.totalPostsCount);
+      setNameCounts(data.nameCounts);
+    } catch (error) {
+      console.error("Error fetching user post count:", error);
+    }
+  };
   const openImageLibrary = async () => {
     try {
       let response = await ImagePicker.launchImageLibraryAsync({
@@ -184,6 +202,52 @@ const MyPage = ({ navigation }) => {
   const handleLogout = () => {
     navigation.navigate("MainPage");
   };
+  const navigateToMyAdsPage = () => {
+    navigation.navigate("MyAdsPage");
+  };
+
+  const [renterInfo, setRenterInfo] = useState(null); // State to store renter information
+  const [showRenterInfoModal, setShowRenterInfoModal] = useState(false); // State to control the visibility of the renter info modal
+
+  // Function to fetch renter information
+  const getRenterInfo = async () => {
+    try {
+      const response = await API.get("/renter/get-renter-info", {
+        headers: {
+          Authorization: token,
+        },
+      });
+      const { renterInfo } = response.data;
+      setRenterInfo(renterInfo);
+      setShowRenterInfoModal(true); // Show the modal after fetching the info
+    } catch (error) {
+      console.error("Error fetching renter information:", error);
+      showAlertMessage("Error fetching renter information");
+    }
+  };
+  const handleDeleteRenterInfo = async (renterInfoId) => {
+    try {
+      const response = await API.delete(`/renter/renter-info/${renterInfoId}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      getRenterInfo();
+      setShowRenterInfoModal(false);
+      showAlertMessage("Data Deleted Successfully");
+    } catch (error) {
+      console.error("Error deleting renter information:", error);
+      return showAlertMessage(
+        "An error occurred while deleting data. Please try again later."
+      );
+    }
+  };
+
+  // Button handler to fetch and display renter information
+  const handleShowRenterInfo = () => {
+    getRenterInfo();
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -239,6 +303,21 @@ const MyPage = ({ navigation }) => {
           />
           <Text style={styles.updatePassButtonText}>Change Password</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.userPostDataContainer}
+          onPress={navigateToMyAdsPage}
+        >
+          <Text style={styles.userPostCountHeading}>Detail Information</Text>
+          <Text style={styles.userPostCount}>
+            Total Posts: {totalPostsCount}
+          </Text>
+          {/* Display individual post counts */}
+          {nameCounts.map((item) => (
+            <Text key={item._id} style={styles.userPostCount}>
+              {item._id} Posts: {item.count}
+            </Text>
+          ))}
+        </TouchableOpacity>
       </View>
 
       {/* Modal for editing profile */}
@@ -253,13 +332,13 @@ const MyPage = ({ navigation }) => {
             <Text style={styles.modalTitle}>Edit Profile</Text>
             <TextInput
               style={styles.input}
-              placeholder="New Name"
+              placeholder="Enter Name"
               value={newName}
               onChangeText={setNewName}
             />
             <TextInput
               style={styles.input}
-              placeholder="New Email"
+              placeholder="Enter Email"
               value={newEmail}
               onChangeText={setNewEmail}
             />
@@ -318,7 +397,60 @@ const MyPage = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-
+      <TouchableOpacity
+        style={styles.showRenterInfoButton}
+        onPress={handleShowRenterInfo}
+      >
+        <Text style={styles.showRenterInfoButtonText}>
+          Show Renter Information
+        </Text>
+      </TouchableOpacity>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showRenterInfoModal}
+        onRequestClose={() => setShowRenterInfoModal(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Renter Information</Text>
+            {/* Map through renterInfo array and display each entry */}
+            {renterInfo &&
+              renterInfo.map((info, index) => (
+                <View key={index} style={{ marginBottom: 10 }}>
+                  <Text>Post Name: {info.postName}</Text>
+                  <Text>Full Name: {info.fullName}</Text>
+                  <Text>Email: {info.email}</Text>
+                  <Text>Date of Birth: {info.dob}</Text>
+                  <Text>Phone Number: {info.phoneNumber}</Text>
+                  <Text>Address: {info.address}</Text>
+                  {/* Add delete button */}
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDeleteRenterInfo(info._id)}
+                  >
+                    <Text style={styles.deleteButtonText}>Delete</Text>
+                  </TouchableOpacity>
+                  {index !== renterInfo.length - 1 && (
+                    <View
+                      style={{
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#ccc",
+                        marginBottom: 10,
+                      }}
+                    />
+                  )}
+                </View>
+              ))}
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setShowRenterInfoModal(false)}
+            >
+              <Text style={styles.modalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       {/* Logout Button */}
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <FontAwesome5
@@ -353,7 +485,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
   },
   innerContainer: {
-    top: -100,
+    // top: -100,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -363,7 +495,7 @@ const styles = StyleSheet.create({
     borderRadius: 125 / 2,
     borderStyle: "dashed",
     borderWidth: 1,
-    marginTop: 30,
+    marginTop: 55,
   },
   uploadBtnText: {
     textAlign: "center",
@@ -371,6 +503,7 @@ const styles = StyleSheet.create({
     opacity: 0.3,
     fontWeight: "bold",
     marginTop: 10,
+    color: "#fff",
   },
   image: {
     width: 150,
@@ -413,6 +546,28 @@ const styles = StyleSheet.create({
     position: "relative",
     width: 370,
     height: 80,
+  },
+  userPostDataContainer: {
+    backgroundColor: "#342d4e",
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 10,
+    position: "relative",
+    width: 370,
+    height: 220,
+  },
+  userPostCountHeading: {
+    color: "#fff",
+    fontSize: 20,
+    fontFamily: "appfont",
+    textAlign: "center",
+    textDecorationLine: "underline",
+    marginBottom: 20,
+  },
+  userPostCount: {
+    color: "#fff",
+    fontSize: 18,
+    marginTop: 5,
   },
   iconContainer: {
     position: "absolute",
@@ -463,9 +618,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#9c80e7",
     paddingVertical: 10,
-    paddingHorizontal: 20, // Adjust the padding as needed
+    paddingHorizontal: 20,
     borderRadius: 25,
-    marginTop: 20,
+    marginTop: 15,
   },
   logoutButtonText: {
     color: "#fff",
@@ -482,7 +637,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 90, // Adjust the padding as needed
     borderRadius: 25,
-    marginTop: 20,
+    marginTop: 10,
   },
   updatePassButtonText: {
     color: "#fff",
@@ -492,6 +647,31 @@ const styles = StyleSheet.create({
   },
   updatePassIcon: {
     marginRight: 10,
+  },
+  showRenterInfoButton: {
+    backgroundColor: "#9c80e7",
+    paddingVertical: 10,
+    paddingHorizontal: 90,
+    borderRadius: 10,
+    marginTop: 10,
+    alignSelf: "center",
+  },
+  showRenterInfoButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  deleteButton: {
+    backgroundColor: "#ff6347", // Red color for delete button
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  deleteButtonText: {
+    color: "#fff", // White color for delete button text
+    fontWeight: "bold",
   },
 });
 

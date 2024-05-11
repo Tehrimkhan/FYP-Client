@@ -13,7 +13,6 @@ const furnlogo = require("../../assets/furnlogo.png");
 
 const Dashboard = ({ navigation }) => {
   const [posts] = useContext(PostContext);
-
   const filteredCarPosts = posts.filter((post) => post.title === "Car");
 
   const filteredAppartmentPosts = posts.filter(

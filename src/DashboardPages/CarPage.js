@@ -17,6 +17,7 @@ import Background from "../Component/Background";
 
 const CarPage = ({ route }) => {
   const { carPosts } = route.params;
+
   const [userIdArray] = useContext(AuthContext);
   const userId = userIdArray?.data?.user?._id;
   const [searchText, setSearchText] = useState("");
